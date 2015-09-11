@@ -32,6 +32,12 @@
 		<!-- Google Map -->
 		<div id = "map">
 		</div>
+		<ul class = "list-group" id = "side-list" data-bind = "foreach: locations.markersInfo">
+			<li class = "list-group-item">
+				<p data-bind="text: name"></p>
+				<p data-bind="text: address"></p>
+			</li>
+		</ul>
 
 		<script src = "bower_components/jquery/dist/jquery.min.js"></script>
 		<script src = "bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
