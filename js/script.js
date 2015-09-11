@@ -4,6 +4,7 @@ var LocationModel = function() {
     var self = this;
 
     self.markers = [];
+    self.placeIDs = [];
     self.markersInfo = ko.observableArray();
 }
 
@@ -15,6 +16,7 @@ var NeighborhoodViewModel = function() {
     self.locations = new LocationModel();
     self.map = null;
     self.selectedMarker = null;
+    self.placeService = null;
 
     self.init = function() {
         self.createMap();
@@ -45,9 +47,11 @@ var NeighborhoodViewModel = function() {
        var searchBox = new google.maps.places.SearchBox(input);
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-       //populate
+       //Create the sideLIst to display
        var sideList = document.getElementById("side-list");
        self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
+
+       self.service = new google.maps.places.PlacesService(self.map);
 
        // Bias the SearchBox results towards current map's viewport.
        self.map.addListener('bounds_changed', function() {
@@ -73,18 +77,19 @@ var NeighborhoodViewModel = function() {
           });
           self.locations.markers = [];
           self.locations.markersInfo([]);
+          self.locations.placeIDs = [];
 
-          // For each place, get the icon, name and location.
+          // For each place, create a new marker and grab the place_id
           var bounds = new google.maps.LatLngBounds();
           var count = 0;    //counter for marker animation delay when dropped
           places.forEach(function(place) {
-              console.log(place);
               count++;
+              console.log(place);
 
-              self.locations.markersInfo.push({
-                  name: place.name,
-                  address: place.formatted_address}
-              );
+              self.locations.placeIDs.push({
+                  placeId: place.place_id
+              });
+
 
               var icon = {
                   url: place.icon,
@@ -113,6 +118,22 @@ var NeighborhoodViewModel = function() {
               } else {
                   bounds.extend(place.geometry.location);
               }
+          });
+
+
+          //For each place_id, grab additional info about the place
+          self.locations.placeIDs.forEach(function(id){
+              self.service.getDetails(id, function(place, status) {
+                  console.log(place);
+                  if (status === google.maps.places.PlacesServiceStatus.OK) {
+                      self.locations.markersInfo.push({
+                          name: place.name,
+                          address: place.formatted_address,
+                          website: place.website,
+                          phone: place.formatted_phone_number
+                      })
+                  }
+                  });
           });
 
           self.map.fitBounds(bounds);
