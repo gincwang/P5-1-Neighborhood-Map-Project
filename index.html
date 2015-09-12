@@ -17,7 +17,7 @@
 					<form class="navbar-form navbar-left" role="search">
 				        <div class="form-group">
 				             <input type="text" class="form-control" id="searchField" placeholder="Search">
-				           	<button type="submit" class="btn btn-default">Submit</button>
+				           	<a id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 						</div>
 				    </form>
 					<ul class="nav nav-pills pull-right">
@@ -35,7 +35,7 @@
 		<ul class = "list-group" id = "side-list" data-bind = "foreach: locations.markersInfo">
 			<li class = "list-group-item">
 				<div class="list-group-item-textGroup">
-					<p data-bind="text: name"></p>
+					<p data-bind="text: name" class="list-group-item-title"></p>
 					<p data-bind="text: rating"></p>
 					<p data-bind="text: address"></p>
 				</div>

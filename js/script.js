@@ -1,3 +1,4 @@
+(function($){
 
 //Model storing each marker info
 var LocationModel = function() {
@@ -5,7 +6,7 @@ var LocationModel = function() {
 
     self.markers = [];
     self.placeIDs = [];
-    self.markersInfo = ko.observableArray([]);
+    self.markersInfo = ko.observableArray();
 }
 
 
@@ -46,6 +47,11 @@ var NeighborhoodViewModel = function() {
        var input = document.getElementById('searchField');
        var searchBox = new google.maps.places.SearchBox(input);
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+       console.log("search-field");
+
+       var clearButton = document.getElementById("clear-search");
+       self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
+       console.log("clear-search");
 
        //Create the sideLIst to display
        var sideList = document.getElementById("side-list");
@@ -76,8 +82,10 @@ var NeighborhoodViewModel = function() {
               marker.setMap(null);
           });
           self.locations.markers = [];
-          self.locations.markersInfo([]);
+          self.locations.markersInfo.removeAll();
           self.locations.placeIDs = [];
+          console.log("clearing variables")
+          console.log(self.locations.markersInfo());
 
           // For each place, create a new marker and grab the place_id
           var bounds = new google.maps.LatLngBounds();
@@ -126,7 +134,7 @@ var NeighborhoodViewModel = function() {
               self.service.getDetails(id, function(place, status) {
                   //console.log(place);
                   if (status === google.maps.places.PlacesServiceStatus.OK) {
-                      console.log(place);
+                      //console.log(place);
                       self.locations.markersInfo.push({
                           name: place.name,
                           address: place.formatted_address,
@@ -162,3 +170,5 @@ var NeighborhoodViewModel = function() {
 }
 
 ko.applyBindings(new NeighborhoodViewModel());
+
+}(jQuery));

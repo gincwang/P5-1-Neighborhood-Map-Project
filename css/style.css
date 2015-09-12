@@ -8,7 +8,7 @@ html, body {
 .form-control {
     width: 400px;
     height: 48px;
-    margin: 20px 20px 5px;
+    margin: 20px 0px 5px 20px;
 }
 
 #map {
@@ -22,6 +22,14 @@ html, body {
     font-size: 16px;
 }
 
+#clear-search {
+    font-size: 16px;
+    padding: 12px;
+    margin: 22px 0px 0px -40px;
+    position: absolute;
+    text-align: left;
+}
+
 #side-list {
     font-size: 12px;
     margin: 5px 20px;
@@ -29,6 +37,17 @@ html, body {
     max-height: 400px;
     overflow:hidden;
     overflow-y:scroll;
+}
+
+.pac-item {
+    height: 40px;
+    vertical-align: baseline;
+    font-size: 12px;
+    padding: 5px 0px 0px 0px;
+}
+
+.pac-item:hover, .pac-item-selected {
+    background-color: #FFBC7D;
 }
 
 .list-group-item:hover {
