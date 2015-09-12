@@ -5,7 +5,7 @@ var LocationModel = function() {
 
     self.markers = [];
     self.placeIDs = [];
-    self.markersInfo = ko.observableArray();
+    self.markersInfo = ko.observableArray([]);
 }
 
 
@@ -84,7 +84,7 @@ var NeighborhoodViewModel = function() {
           var count = 0;    //counter for marker animation delay when dropped
           places.forEach(function(place) {
               count++;
-              console.log(place);
+              //console.log(place);
 
               self.locations.placeIDs.push({
                   placeId: place.place_id
@@ -124,14 +124,23 @@ var NeighborhoodViewModel = function() {
           //For each place_id, grab additional info about the place
           self.locations.placeIDs.forEach(function(id){
               self.service.getDetails(id, function(place, status) {
-                  console.log(place);
+                  //console.log(place);
                   if (status === google.maps.places.PlacesServiceStatus.OK) {
+                      console.log(place);
                       self.locations.markersInfo.push({
                           name: place.name,
                           address: place.formatted_address,
                           website: place.website,
-                          phone: place.formatted_phone_number
-                      })
+                          phone: place.formatted_phone_number,
+                          photos: place.photos,
+                          rating: place.rating,
+                          price_level: place.price_level,
+                          opening_hours: place.opening_hours,
+                          reviews: place.reviews,
+                          types: place.types
+                      });
+
+                      //console.log(self.locations.markersInfo()[0].photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}));
                   }
                   });
           });
@@ -142,8 +151,13 @@ var NeighborhoodViewModel = function() {
 
     }
 
+
+
     //get the map started with the init()
     self.init();
+
+
+
 
 }
 

@@ -34,9 +34,14 @@
 		</div>
 		<ul class = "list-group" id = "side-list" data-bind = "foreach: locations.markersInfo">
 			<li class = "list-group-item">
-				<p data-bind="text: name"></p>
-				<p data-bind="text: address"></p>
-				<p data-bind="text: website"></p>
+				<div class="list-group-item-textGroup">
+					<p data-bind="text: name"></p>
+					<p data-bind="text: rating"></p>
+					<p data-bind="text: address"></p>
+				</div>
+				<div class="list-group-item-img">
+					<img height="80" width="80" alt="location image" data-bind="attr: {src: photos[0].getUrl({'maxWidth': 80, 'maxHeight': 80})}">
+				</div>
 			</li>
 		</ul>
 
