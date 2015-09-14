@@ -17,7 +17,7 @@
 					<form class="navbar-form navbar-left" role="search">
 				        <div class="form-group">
 				             <input type="text" class="form-control" id="searchField" placeholder="Search">
-				           	<a id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+				           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 						</div>
 				    </form>
 					<ul class="nav nav-pills pull-right">
@@ -40,7 +40,9 @@
 					<p data-bind="text: address"></p>
 				</div>
 				<div class="list-group-item-img">
-					<img height="80" width="80" alt="location image" data-bind="attr: {src: photos[0].getUrl({'maxWidth': 80, 'maxHeight': 80})}">
+					<!-- ko if: types[0] != "locality" -->
+						<img height="80" width="80" alt="location image" data-bind=" attr: {src: photos[0].getUrl({'maxWidth': 80, 'maxHeight': 80})}">
+					<!-- /ko -->
 				</div>
 			</li>
 		</ul>
