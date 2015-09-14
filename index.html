@@ -33,7 +33,7 @@
 		<div id = "map">
 		</div>
 		<ul class = "list-group" id = "side-list" data-bind = "foreach: locations.markersInfo">
-			<li class = "list-group-item">
+			<li data-bind="event: {mouseover: $parent.showMarker, mouseout: $parent.removeMarker}" class = "list-group-item">
 				<div class="list-group-item-textGroup">
 					<p data-bind="text: name" class="list-group-item-title"></p>
 					<p data-bind="text: rating"></p>

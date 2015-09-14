@@ -23,6 +23,31 @@ var NeighborhoodViewModel = function() {
     self.init = function() {
         self.createMap();
     }
+    
+    self.showMarker = function(){
+        console.log("list item is hovered");
+        if(!self.selectedMarker){
+            self.selectedMarker = new google.maps.Marker({
+                map: self.map,
+                title: this.name,
+                position: this.geometry.location
+            });
+        }else if(self.selectedMarker.position != this.geometry.location){
+            self.selectedMarker.setMap(null);
+            self.selectedMarker = new google.maps.Marker({
+                map: self.map,
+                title: this.name,
+                position: this.geometry.location
+            });
+        }else {
+            return;
+        }
+    }
+
+    self.removeMarker = function() {
+        self.selectedMarker.setMap(null);
+        self.selectedMarker = null;
+    }
 
     self.createMap = function() {
 
@@ -166,14 +191,13 @@ var NeighborhoodViewModel = function() {
         self.searchText[0].value = "";
 
         self.locations.markersInfo.removeAll();
-        $('#side-list').empty();
 
         self.locations.markers.forEach(function(marker) {
             marker.setMap(null);
         });
+
         self.locations.markers = [];
         self.locations.placeIDs = [];
-        console.log(self.searchText[0].value);
         //console.log(self.locations);
     }
 
