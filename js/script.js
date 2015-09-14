@@ -18,6 +18,7 @@ var NeighborhoodViewModel = function() {
     self.map = null;
     self.selectedMarker = null;
     self.placeService = null;
+    self.searchText = $('#searchField');
 
     self.init = function() {
         self.createMap();
@@ -25,7 +26,7 @@ var NeighborhoodViewModel = function() {
 
     self.createMap = function() {
 
-        /* Google API Key: AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk   */
+        /* Google API Key: AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk  */
         console.log("self.createMap()")
          //initialize a map centering on the USA
         self.map = new google.maps.Map(document.getElementById('map'), {
@@ -43,17 +44,16 @@ var NeighborhoodViewModel = function() {
           }
         });
 
-        // Create the search box and link it to the UI element.
+        // Assign the search box and link it to the UI element.
        var input = document.getElementById('searchField');
        var searchBox = new google.maps.places.SearchBox(input);
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-       console.log("search-field");
 
+       //Assign the clear-search button next to search bar
        var clearButton = document.getElementById("clear-search");
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
-       console.log("clear-search");
 
-       //Create the sideLIst to display
+       //Assign the sideLIst to display
        var sideList = document.getElementById("side-list");
        self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
 
@@ -70,6 +70,7 @@ var NeighborhoodViewModel = function() {
        // more details for that place.
        searchBox.addListener('places_changed', function() {
           console.log("places_changed()");
+          //grabs results from searchBox
           var places = searchBox.getPlaces();
 
           if (places.length == 0) {
@@ -134,7 +135,7 @@ var NeighborhoodViewModel = function() {
               self.service.getDetails(id, function(place, status) {
                   //console.log(place);
                   if (status === google.maps.places.PlacesServiceStatus.OK) {
-                      //console.log(place);
+                      console.log(place);
                       self.locations.markersInfo.push({
                           name: place.name,
                           address: place.formatted_address,
@@ -145,7 +146,8 @@ var NeighborhoodViewModel = function() {
                           price_level: place.price_level,
                           opening_hours: place.opening_hours,
                           reviews: place.reviews,
-                          types: place.types
+                          types: place.types,
+                          geometry: place.geometry
                       });
 
                       //console.log(self.locations.markersInfo()[0].photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}));
@@ -159,7 +161,21 @@ var NeighborhoodViewModel = function() {
 
     }
 
+    self.resetSearch = function(){
+        console.log("reset search()");
+        self.searchText[0].value = "";
 
+        self.locations.markersInfo.removeAll();
+        $('#side-list').empty();
+
+        self.locations.markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        self.locations.markers = [];
+        self.locations.placeIDs = [];
+        console.log(self.searchText[0].value);
+        //console.log(self.locations);
+    }
 
     //get the map started with the init()
     self.init();
