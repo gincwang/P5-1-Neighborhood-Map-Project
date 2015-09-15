@@ -43,6 +43,7 @@ html, body {
     background: white;
     width: 400px;
     margin: 5px 20px;
+    position: relative;
 }
 
 .pac-item {

@@ -43,32 +43,41 @@ var NeighborhoodViewModel = function() {
     }
 
     self.showMarker = function(marker,data){
-        //console.log("list item is hovered");
-        console.log(marker);
-        console.log(data);
+        //console.log("show marker");
+        //console.log(marker);
+        //console.log(data);
         marker.title = data.name;
         marker.position = data.geometry.location;
         marker.setMap(self.map);
-        console.log(marker);
-        console.log(self.selectedMarker);
+        //console.log(marker);
+        //console.log(self.selectedMarker);
 
     }
 
     self.removeMarker = function(marker) {
-        //console.log("list mouseout");
+        console.log("remove Marker");
+        //console.log(marker);
         marker.setMap(null);
         //console.log(marker);
     }
 
     self.showDetail = function(marker){
-        console.log("list item clicked");
-        console.log(marker);
+        console.log("show detail");
+        //console.log(marker);
+        //console.log(this);
         self.listVisible(false);
         self.detailVisible(true);
         self.showMarker(marker,this);
         //self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
         self.selectedMarkerInfo(this);
+    }
 
+    self.hideDetail = function(){
+        console.log("hide Detail");
+        self.detailVisible(false);
+        self.listVisible(true);
+        self.removeMarker(self.selectedMarker);
+        self.selectedMarkerInfo(null);
     }
 
     self.createMap = function() {
