@@ -39,6 +39,12 @@ html, body {
     overflow-y:scroll;
 }
 
+#list-detail {
+    background: white;
+    width: 400px;
+    margin: 5px 20px;
+}
+
 .pac-item {
     height: 40px;
     vertical-align: baseline;

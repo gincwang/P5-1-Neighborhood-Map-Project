@@ -11,41 +11,47 @@
 		<!-- Navigation -->
 		<div class = "navbar navbar-default">
 			<div class = "container">
-					<div class = "navbar-header">
-						<a class ="navbar-brand" href = "#">Neighborhood Map</a>
-					</div>
-					<form class="navbar-form navbar-left" role="search">
-				        <div class="form-group">
-				             <input type="text" class="form-control" id="searchField" placeholder="Search">
-				           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-						</div>
-				    </form>
-					<ul class="nav nav-pills pull-right">
-						<li class = "active"><a href="#">Food</a></li>
-						<li><a href = "#">Entertainment</a></li>
-						<li><a href = "#">History</a></li>
-					</ul>
+				<div class = "navbar-header">
+					<a class ="navbar-brand" href = "#">Neighborhood Map</a>
 				</div>
+				<form class="navbar-form navbar-left" role="search">
+			        <div class="form-group">
+			             <input type="text" class="form-control" id="searchField" placeholder="Search">
+			           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+					</div>
+			    </form>
+				<ul class="nav nav-pills pull-right">
+					<li class = "active"><a href="#">Food</a></li>
+					<li><a href = "#">Entertainment</a></li>
+					<li><a href = "#">History</a></li>
+				</ul>
 			</div>
 		</div>
 
 		<!-- Google Map -->
 		<div id = "map">
 		</div>
-		<ul class = "list-group" id = "side-list" data-bind = "foreach: locations.markersInfo">
-			<li data-bind="event: {mouseover: $parent.showMarker, mouseout: $parent.removeMarker}" class = "list-group-item">
+		<!-- List Results -->
+		<ul class = "list-group" id = "side-list" data-bind = "visible: listVisible, foreach: locations.markersInfo">
+			<li data-bind="event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
 				<div class="list-group-item-textGroup">
 					<p data-bind="text: name" class="list-group-item-title"></p>
 					<p data-bind="text: rating"></p>
 					<p data-bind="text: address"></p>
 				</div>
 				<div class="list-group-item-img">
-					<!-- ko if: types[0] != "locality" -->
+					<!-- ko if: photos -->
 						<img height="80" width="80" alt="location image" data-bind=" attr: {src: photos[0].getUrl({'maxWidth': 80, 'maxHeight': 80})}">
 					<!-- /ko -->
 				</div>
 			</li>
 		</ul>
+
+		<!-- Item Details -->
+		<div id="list-detail" data-bind="visible: detailVisible, with: selectedMarkerInfo" >
+			<h3 data-bind="text: name"></h3>
+			<h4 data-bind="text: address"></h4>
+		</div>
 
 		<script src = "bower_components/jquery/dist/jquery.min.js"></script>
 		<script src = "bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

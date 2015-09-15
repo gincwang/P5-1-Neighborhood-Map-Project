@@ -14,39 +14,61 @@ var LocationModel = function() {
 var NeighborhoodViewModel = function() {
     var self = this;
 
-    self.locations = new LocationModel();
     self.map = null;
-    self.selectedMarker = null;
-    self.placeService = null;
+    self.locations = new LocationModel();
     self.searchText = $('#searchField');
+
+    self.listVisible = ko.observable(true);
+    self.detailVisible = ko.observable(false);
+    self.selectedMarker = {};
+    self.hoverMarker = {};
+    self.selectedMarkerInfo = ko.observable();
+    self.placeService = null;
+
 
     self.init = function() {
         self.createMap();
-    }
-    
-    self.showMarker = function(){
-        console.log("list item is hovered");
-        if(!self.selectedMarker){
-            self.selectedMarker = new google.maps.Marker({
-                map: self.map,
-                title: this.name,
-                position: this.geometry.location
-            });
-        }else if(self.selectedMarker.position != this.geometry.location){
-            self.selectedMarker.setMap(null);
-            self.selectedMarker = new google.maps.Marker({
-                map: self.map,
-                title: this.name,
-                position: this.geometry.location
-            });
-        }else {
-            return;
-        }
+        self.initializeMarkers();
     }
 
-    self.removeMarker = function() {
-        self.selectedMarker.setMap(null);
-        self.selectedMarker = null;
+    self.initializeMarkers = function(){
+
+        self.selectedMarker = new google.maps.Marker({
+            position: {lat:0, lng:0}
+        });
+
+        self.hoverMarker = new google.maps.Marker({
+            position: {lat:0, lng:0}
+        });
+    }
+
+    self.showMarker = function(marker,data){
+        //console.log("list item is hovered");
+        console.log(marker);
+        console.log(data);
+        marker.title = data.name;
+        marker.position = data.geometry.location;
+        marker.setMap(self.map);
+        console.log(marker);
+        console.log(self.selectedMarker);
+
+    }
+
+    self.removeMarker = function(marker) {
+        //console.log("list mouseout");
+        marker.setMap(null);
+        //console.log(marker);
+    }
+
+    self.showDetail = function(marker){
+        console.log("list item clicked");
+        console.log(marker);
+        self.listVisible(false);
+        self.detailVisible(true);
+        self.showMarker(marker,this);
+        //self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+        self.selectedMarkerInfo(this);
+
     }
 
     self.createMap = function() {
@@ -82,6 +104,9 @@ var NeighborhoodViewModel = function() {
        var sideList = document.getElementById("side-list");
        self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
 
+       var listDetail = document.getElementById("list-detail");
+       self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(listDetail);
+
        self.service = new google.maps.places.PlacesService(self.map);
 
        // Bias the SearchBox results towards current map's viewport.
@@ -111,9 +136,9 @@ var NeighborhoodViewModel = function() {
           self.locations.markersInfo.removeAll();
           self.locations.placeIDs = [];
           console.log("clearing variables")
-          console.log(self.locations.markersInfo());
 
           // For each place, create a new marker and grab the place_id
+          self.listVisible(true);
           var bounds = new google.maps.LatLngBounds();
           var count = 0;    //counter for marker animation delay when dropped
           places.forEach(function(place) {
@@ -174,10 +199,8 @@ var NeighborhoodViewModel = function() {
                           types: place.types,
                           geometry: place.geometry
                       });
-
-                      //console.log(self.locations.markersInfo()[0].photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}));
                   }
-                  });
+              });
           });
 
           self.map.fitBounds(bounds);
@@ -189,15 +212,15 @@ var NeighborhoodViewModel = function() {
     self.resetSearch = function(){
         console.log("reset search()");
         self.searchText[0].value = "";
-
         self.locations.markersInfo.removeAll();
-
         self.locations.markers.forEach(function(marker) {
             marker.setMap(null);
         });
-
         self.locations.markers = [];
         self.locations.placeIDs = [];
+        self.listVisible(true);
+        self.detailVisible(false);
+        self.selectedMarkerInfo('');
         //console.log(self.locations);
     }
 
