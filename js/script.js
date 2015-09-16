@@ -42,12 +42,12 @@ var NeighborhoodViewModel = function() {
         });
     }
 
-    self.showMarker = function(marker,data){
-        //console.log("show marker");
-        //console.log(marker);
-        //console.log(data);
-        marker.title = data.name;
-        marker.position = data.geometry.location;
+    self.showMarker = function(marker,_data){
+        console.log("show marker");
+        console.log(marker);
+        console.log(_data);
+        marker.title = _data.name;
+        marker.position = _data.geometry.location;
         marker.setMap(self.map);
         //console.log(marker);
         //console.log(self.selectedMarker);
@@ -61,15 +61,15 @@ var NeighborhoodViewModel = function() {
         //console.log(marker);
     }
 
-    self.showDetail = function(marker){
+    self.showDetail = function(marker,_data){
         console.log("show detail");
-        //console.log(marker);
-        //console.log(this);
+        console.log(marker);
+        console.log(_data);
         self.listVisible(false);
         self.detailVisible(true);
-        self.showMarker(marker,this);
+        self.showMarker(marker,_data);
         //self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-        self.selectedMarkerInfo(this);
+        self.selectedMarkerInfo(_data);
     }
 
     self.hideDetail = function(){
@@ -133,9 +133,11 @@ var NeighborhoodViewModel = function() {
           var places = searchBox.getPlaces();
 
           if (places.length == 0) {
-            //no match was found
-           return;
-          }
+                //no match was found
+                return;
+           }else if (places.length > 10){
+                places.splice(9,places.length-10);
+           }
 
           // Clear out the old markers and list location info
           self.locations.markers.forEach(function(marker) {
@@ -149,15 +151,13 @@ var NeighborhoodViewModel = function() {
           // For each place, create a new marker and grab the place_id
           self.listVisible(true);
           var bounds = new google.maps.LatLngBounds();
-          var count = 0;    //counter for marker animation delay when dropped
+          var delayCount = 0;    //delayCounter for marker animation delay when dropped
           places.forEach(function(place) {
-              count++;
-              //console.log(place);
+              delayCount++;
 
               self.locations.placeIDs.push({
                   placeId: place.place_id
               });
-
 
               var icon = {
                   url: place.icon,
@@ -177,22 +177,39 @@ var NeighborhoodViewModel = function() {
                       animation: google.maps.Animation.DROP
                   }));
 
-              }, 50 * count);
+                  var i = self.locations.markers.length-1;
+                  self.locations.markers[i].addListener('click', (function(icopy){
+                      return function(){
+                          console.log("marker clicked");
+                          console.log(icopy);
+                          console.log(self.locations.markersInfo()[icopy]);
+                          console.log(self.locations.markersInfo());
+                          self.showDetail(self.selectedMarker, self.locations.markersInfo()[icopy]);
+                          self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+                          setTimeout(function(){
+                                self.selectedMarker.setAnimation(null);
+                          }, 700);
+                      };
+                  })(i));
+
+                  }, 50 * delayCount);
 
 
-              if (place.geometry.viewport) {
-                  // Only geocodes have viewport.
-                  bounds.union(place.geometry.viewport);
-              } else {
-                  bounds.extend(place.geometry.location);
-              }
+                  if (place.geometry.viewport) {
+                      // Only geocodes have viewport.
+                      bounds.union(place.geometry.viewport);
+                  } else {
+                      bounds.extend(place.geometry.location);
+                  }
           });
 
 
           //For each place_id, grab additional info about the place
           self.locations.placeIDs.forEach(function(id){
-              self.service.getDetails(id, function(place, status) {
-                  //console.log(place);
+             setTimeout(self.service.getDetails(id, function(place, status) {
+                  console.log("build markersInfo array")
+                  console.log(place);
+                  console.log(status);
                   if (status === google.maps.places.PlacesServiceStatus.OK) {
                       console.log(place);
                       self.locations.markersInfo.push({
@@ -208,8 +225,10 @@ var NeighborhoodViewModel = function() {
                           types: place.types,
                           geometry: place.geometry
                       });
+                  }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
+                    console.log("reaches query limit");
                   }
-              });
+              }), 500);
           });
 
           self.map.fitBounds(bounds);
