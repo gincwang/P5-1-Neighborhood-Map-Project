@@ -48,11 +48,11 @@
 		</ul>
 
 		<!-- Item Details -->
-		<div id="list-detail" data-bind="visible: detailVisible, click: hideDetail, with: selectedMarkerInfo" >
+		<div id="list-detail" data-bind="visible: detailVisible, with: selectedMarkerInfo" >
 			<h3 data-bind="text: name"></h3>
 			<h4 data-bind="text: address"></h4>
 			<!-- ko if website -->
-			<h5 data-bind="text: website"></h5>
+			<a data-bind="text: website, attr:{href: website}"></a>
 			<!-- /ko -->
 			<!-- ko if phone -->
 			<h5 data-bind="text: phone"></h5>

@@ -19,8 +19,8 @@ var NeighborhoodViewModel = function() {
 
     self.listVisible = ko.observable(true);
     self.detailVisible = ko.observable(false);
-    self.selectedMarker = {};
-    self.hoverMarker = {};
+    self.selectedMarker = null;
+    self.hoverMarker = null;
     self.selectedMarkerInfo = ko.observable();
     self.placeService = null;
 
@@ -78,6 +78,27 @@ var NeighborhoodViewModel = function() {
         self.removeMarker(self.selectedMarker);
         self.selectedMarkerInfo(null);
     }
+
+    //clear everything except the search text
+    var clearMapVisible = function(){
+        self.locations.markersInfo.removeAll();
+        self.locations.markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        self.locations.markers = [];
+        self.listVisible(true);
+        self.detailVisible(false);
+        self.selectedMarkerInfo(null);
+    }
+
+    self.resetSearch = function(){
+        console.log("reset search()");
+        self.searchText[0].value = "";
+        clearMapVisible();
+
+        //console.log(self.locations);
+    }
+
 /*Document*/
     self.createMap = function() {
 
@@ -97,6 +118,13 @@ var NeighborhoodViewModel = function() {
               style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
               position: google.maps.ControlPosition.TOP_RIGHT
           }
+        });
+
+        self.map.addListener('click', function(){
+            console.log("map is clicked");
+            if(self.selectedMarkerInfo){
+                self.hideDetail();
+            }
         });
 
         // Assign the search box and link it to the UI element.
@@ -135,19 +163,14 @@ var NeighborhoodViewModel = function() {
                 return;
            }else if (places.length > 10){
                //Don't grab more than 10 markers to avoid google's OVER_QUERY_LIMIT
-                places.splice(9,places.length-10);
+                places.splice(9, places.length-10);
            }
-/*Refactor*/
+
           // Clear out the old markers and list location info
-          self.locations.markers.forEach(function(marker) {
-              marker.setMap(null);
-          });
-          self.locations.markers = [];
-          self.locations.markersInfo.removeAll();
-          console.log("clearing variables")
+          console.log("clearing map variables (except search text)")
+          clearMapVisible();
 
           // For each place, create a new marker and grab the place_id
-          self.listVisible(true);
           var bounds = new google.maps.LatLngBounds();
           var place;
           for(var k = 0; k < places.length; k++){
@@ -161,9 +184,9 @@ var NeighborhoodViewModel = function() {
                   scaledSize: new google.maps.Size(25, 25)
               };
 
-              //build locations.markers array
               (function(placeCopy, kCopy){
                   setTimeout((function(){
+                  //build marker array from place
                   self.locations.markers.push(new google.maps.Marker({
                       map: self.map,
                       icon: icon,
@@ -171,10 +194,7 @@ var NeighborhoodViewModel = function() {
                       position: placeCopy.geometry.location,
                       animation: google.maps.Animation.DROP
                   }));
-                  console.log(" place #" + kCopy);
-                  console.log(placeCopy);
-                  console.log("marker assigned");
-                  console.log(self.locations.markers);
+                  //add click listener to each marker
                   self.locations.markers[kCopy].addListener('click',(function(index){
                       return function(){
                           console.log("marker clicked");
@@ -189,106 +209,55 @@ var NeighborhoodViewModel = function() {
                                     self.selectedMarker.setAnimation(null);
                               }, 700);
                           }else {
-                              console.log("can't match ")
+                              console.log("can't match marker location info");
                           }
                       };
                   })(kCopy));
-              }), 50*kCopy);
-          })(place,k);
+                }), 50*kCopy);
+              })(place,k);
 
-          if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-          } else {
-              bounds.extend(place.geometry.location);
-          }
+              if (place.geometry.viewport) {
+                  // Only geocodes have viewport.
+                  bounds.union(place.geometry.viewport);
+              } else {
+                  bounds.extend(place.geometry.location);
+              }
 
-          self.service.getDetails({placeId:place.place_id}, function(_place, status) {
-               console.log("build markersInfo array")
-               console.log(_place);
-             //  console.log(status);
-               if (status === google.maps.places.PlacesServiceStatus.OK) {
-                 //  console.log(place);
-                   self.locations.markersInfo.push({
-                       name: _place.name,
-                       address: _place.formatted_address,
-                       website: _place.website,
-                       phone: _place.formatted_phone_number,
-                       photos: _place.photos,
-                       rating: _place.rating,
-                       price_level: _place.price_level,
-                       opening_hours: _place.opening_hours,
-                       reviews: _place.reviews,
-                       types: _place.types,
-                       geometry: _place.geometry,
-                       id: _place.place_id
-                   });
-                   console.log("markersInfo array");
-                   console.log(self.locations.markersInfo());
-               }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
-                 console.log("reaches query limit");
-               }
-           });
-
-
-
-         }
-
-/*
-          //get location detail from each place_id
-          self.locations.placeIDs.forEach(function(id){
-             self.service.getDetails(id, function(place, status) {
-                  console.log("build markersInfo array")
-                 // console.log(place);
-                //  console.log(status);
-                  if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    //  console.log(place);
-                      self.locations.markersInfo.push({
-                          name: place.name,
-                          address: place.formatted_address,
-                          website: place.website,
-                          phone: place.formatted_phone_number,
-                          photos: place.photos,
-                          rating: place.rating,
-                          price_level: place.price_level,
-                          opening_hours: place.opening_hours,
-                          reviews: place.reviews,
-                          types: place.types,
-                          geometry: place.geometry,
-                          id: place.place_id
-                      });
-                      console.log(self.locations.markersInfo());
-                  }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
-                    console.log("reaches query limit");
-                  }
-              });
+              self.service.getDetails({placeId:place.place_id}, function(_place, status) {
+                   console.log("build markersInfo array")
+                   console.log(_place);
+                 //  console.log(status);
+                   if (status === google.maps.places.PlacesServiceStatus.OK) {
+                     //  console.log(place);
+                       self.locations.markersInfo.push({
+                           name: _place.name,
+                           address: _place.formatted_address,
+                           website: _place.website,
+                           phone: _place.formatted_phone_number,
+                           photos: _place.photos,
+                           rating: _place.rating,
+                           price_level: _place.price_level,
+                           opening_hours: _place.opening_hours,
+                           reviews: _place.reviews,
+                           types: _place.types,
+                           geometry: _place.geometry,
+                           id: _place.place_id
+                       });
+                       console.log("markersInfo array");
+                       console.log(self.locations.markersInfo());
+                   }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
+                     console.log("reaches query limit");
+                 }else if (status === google.maps.places.PlacesServiceStatus.ERROR){
+                     console.log("error contacting google server for location details");
+                 }
+               });
+             }
+              self.map.fitBounds(bounds);
           });
-*/
-          self.map.fitBounds(bounds);
-      });
-
-
-    }
-
-    self.resetSearch = function(){
-        console.log("reset search()");
-        self.searchText[0].value = "";
-        self.locations.markersInfo.removeAll();
-        self.locations.markers.forEach(function(marker) {
-            marker.setMap(null);
-        });
-        self.locations.markers = [];
-        self.listVisible(true);
-        self.detailVisible(false);
-        self.selectedMarkerInfo('');
-        //console.log(self.locations);
     }
 
     //get the map started with the init()
     self.init();
-
-
-
 
 }
 

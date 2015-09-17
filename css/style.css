@@ -45,6 +45,8 @@ html, body {
     margin: 5px 20px;
     padding: 10px;
     position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .pac-item {
