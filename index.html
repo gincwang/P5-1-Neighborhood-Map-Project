@@ -39,7 +39,7 @@
 					<p data-bind="text: rating"></p>
 					<p data-bind="text: address"></p>
 				</div>
-				<div class="list-group-item-img">
+				<div class="info-img">
 					<!-- ko if: photos -->
 						<img height="80" width="80" alt="location image" data-bind=" attr: {src: photos[0].getUrl({'maxWidth': 80, 'maxHeight': 80})}">
 					<!-- /ko -->
@@ -49,14 +49,20 @@
 
 		<!-- Item Details -->
 		<div id="list-detail" data-bind="visible: detailVisible, with: selectedMarkerInfo" >
-			<h3 data-bind="text: name"></h3>
-			<h4 data-bind="text: address"></h4>
-			<!-- ko if website -->
-			<a data-bind="text: website, attr:{href: website}"></a>
-			<!-- /ko -->
-			<!-- ko if phone -->
-			<h5 data-bind="text: phone"></h5>
-			<!-- /ko -->
+			<div>
+				<h3 data-bind="text: name"></h3>
+				<h4 data-bind="text: address"></h4>
+				<div data-bind="if: website"><a target="_blank" data-bind="text: website, attr:{href: website}"></a></div>
+				<div data-bind="if: phone"><h5 data-bind="text: phone"></h5></div>
+				<div data-bind="if: opening_hours">
+					<ul data-bind="foreach: opening_hours.weekday_text" class="list-unstyled">
+						<li data-bind="text: $data"></li>
+					</ul>
+				</div>
+			</div>
+			<div data-bind= "if: photos" class="info-img">
+					<img height="285" width="380" alt="location image" data-bind=" attr: {src: photos[0].getUrl({'maxWidth': 380, 'maxHeight': 285})}">
+			</div>
 		</div>
 
 		<script src = "bower_components/jquery/dist/jquery.min.js"></script>

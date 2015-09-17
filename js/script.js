@@ -31,11 +31,9 @@ var NeighborhoodViewModel = function() {
     }
 /*Document*/
     self.initializeMarkers = function(){
-
         self.selectedMarker = new google.maps.Marker({
             position: {lat:0, lng:0}
         });
-
         self.hoverMarker = new google.maps.Marker({
             position: {lat:0, lng:0}
         });
@@ -43,36 +41,26 @@ var NeighborhoodViewModel = function() {
 /*Document*/
     self.showMarker = function(marker,_data){
         //console.log("show marker");
-        //console.log(marker);
-        //console.log(_data);
         marker.title = _data.name;
         marker.position = _data.geometry.location;
         marker.setMap(self.map);
-        //console.log(marker);
-        //console.log(self.selectedMarker);
-
     }
 /*Document*/
     self.removeMarker = function(marker) {
         //console.log("remove Marker");
-        //console.log(marker);
         marker.setMap(null);
-        //console.log(marker);
     }
 /*Document*/
     self.showDetail = function(marker,_data){
         //console.log("show detail");
-        //console.log(marker);
-        //console.log(_data);
         self.listVisible(false);
         self.detailVisible(true);
         self.showMarker(marker,_data);
-        //self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
         self.selectedMarkerInfo(_data);
     }
 /*Document*/
     self.hideDetail = function(){
-        console.log("hide Detail");
+        //console.log("hide Detail");
         self.detailVisible(false);
         self.listVisible(true);
         self.removeMarker(self.selectedMarker);
@@ -95,15 +83,13 @@ var NeighborhoodViewModel = function() {
         console.log("reset search()");
         self.searchText[0].value = "";
         clearMapVisible();
-
-        //console.log(self.locations);
     }
 
 /*Document*/
     self.createMap = function() {
 
         /* Google API Key: AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk  */
-        console.log("self.createMap()")
+        console.log("creating map object..")
          //initialize a map centering on the USA
         self.map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 39.388, lng: -100.279},
@@ -120,37 +106,36 @@ var NeighborhoodViewModel = function() {
           }
         });
 
-        self.map.addListener('click', function(){
-            console.log("map is clicked");
-            if(self.selectedMarkerInfo){
-                self.hideDetail();
-            }
-        });
-
+        // MAP UI //
         // Assign the search box and link it to the UI element.
        var input = document.getElementById('searchField');
        var searchBox = new google.maps.places.SearchBox(input);
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
        //Assign the clear-search button next to search bar
        var clearButton = document.getElementById("clear-search");
        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
-
        //Assign the sideLIst to display
        var sideList = document.getElementById("side-list");
        self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
-
+       //Assign detail box below sideLIst
        var listDetail = document.getElementById("list-detail");
        self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(listDetail);
-
+       //Activate google autocomplete service
        self.service = new google.maps.places.PlacesService(self.map);
+
+       // MAP LISTENERS //
+/*Document*/
+       //hide currently selected marker
+       self.map.addListener('click', function(){
+           console.log("map is clicked");
+           if(self.selectedMarkerInfo){self.hideDetail();}
+       });
 /*Document*/
        // Bias the SearchBox results towards current map's viewport.
        self.map.addListener('bounds_changed', function() {
          console.log("bounds_changed()");
          searchBox.setBounds(self.map.getBounds());
        });
-
 /*Document*/
        // Listen for the event fired when the user selects a prediction and retrieve
        // more details for that place.
@@ -175,7 +160,6 @@ var NeighborhoodViewModel = function() {
           var place;
           for(var k = 0; k < places.length; k++){
               place = places[k];
-
               var icon = {
                   url: place.icon,
                   size: new google.maps.Size(50, 50),
@@ -183,10 +167,9 @@ var NeighborhoodViewModel = function() {
                   anchor: new google.maps.Point(17, 34),
                   scaledSize: new google.maps.Size(25, 25)
               };
-
+              //build marker array from place
               (function(placeCopy, kCopy){
                   setTimeout((function(){
-                  //build marker array from place
                   self.locations.markers.push(new google.maps.Marker({
                       map: self.map,
                       icon: icon,
@@ -198,10 +181,10 @@ var NeighborhoodViewModel = function() {
                   self.locations.markers[kCopy].addListener('click',(function(index){
                       return function(){
                           console.log("marker clicked");
-                          console.log(this.position);
-                          console.log(self.locations.markersInfo()[0].geometry.location);
-                          var j = self.locations.markersInfo().map(function(e){return e.geometry.location.H;}).indexOf(this.position.H);
-                          var k = self.locations.markersInfo().map(function(e){return e.geometry.location.L;}).indexOf(this.position.L);
+                          var j = self.locations.markersInfo().map(
+                                        function(e){return e.geometry.location.H;}).indexOf(this.position.H);
+                          var k = self.locations.markersInfo().map(
+                                        function(e){return e.geometry.location.L;}).indexOf(this.position.L);
                           if(j===k){
                               self.showDetail(self.selectedMarker, self.locations.markersInfo()[j]);
                               self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
@@ -223,12 +206,10 @@ var NeighborhoodViewModel = function() {
                   bounds.extend(place.geometry.location);
               }
 
+              //build markersInfo array
               self.service.getDetails({placeId:place.place_id}, function(_place, status) {
                    console.log("build markersInfo array")
-                   console.log(_place);
-                 //  console.log(status);
                    if (status === google.maps.places.PlacesServiceStatus.OK) {
-                     //  console.log(place);
                        self.locations.markersInfo.push({
                            name: _place.name,
                            address: _place.formatted_address,
@@ -243,7 +224,6 @@ var NeighborhoodViewModel = function() {
                            geometry: _place.geometry,
                            id: _place.place_id
                        });
-                       console.log("markersInfo array");
                        console.log(self.locations.markersInfo());
                    }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
                      console.log("reaches query limit");
