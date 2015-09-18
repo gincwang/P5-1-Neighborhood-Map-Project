@@ -60,15 +60,20 @@
 					</ul>
 				</div>
 			</div>
-			<div data-bind= "if: photos" class="info-img">
+			<div data-bind="if: photos" class="info-img">
 					<img height="285" width="380" alt="location image" data-bind=" attr: {src: photos[0].getUrl({'maxWidth': 380, 'maxHeight': 285})}">
+			</div>
+			<div data-bind="if: types[0]==='locality'">
+				<hr>
+				<h5>Wikipedia Quick Facts:</h5>
+				<h6 data-bind="text: $parent.wikiText"></h6>
 			</div>
 		</div>
 
 		<script src = "bower_components/jquery/dist/jquery.min.js"></script>
 		<script src = "bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src = "bower_components/knockout/dist/knockout.js"></script>
-		<script	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk&libraries=places"></script>
+		<script	src="https://maps.googleapis.com/maps/api/js?region=US&key=AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk&libraries=places"></script>
         <script src = "js/script.js"></script>
 
     </body>

@@ -23,6 +23,7 @@ var NeighborhoodViewModel = function() {
     self.hoverMarker = null;
     self.selectedMarkerInfo = ko.observable();
     self.placeService = null;
+    self.wikiText = ko.observable(' ');
 
 /*Document*/
     self.init = function() {
@@ -85,6 +86,34 @@ var NeighborhoodViewModel = function() {
         clearMapVisible();
     }
 
+    var getWikiText = function(address){
+        var regex = /,\sUSA/;
+        var regex2 = /\s/g;
+        var regex3 = /,/;
+        var add = address.replace(regex, "").replace(regex2,"%20").replace(regex3,"%2C");
+        console.log(add);
+
+        var wikiRequestTimeout = setTimeout(function(){
+            self.wikiText("Failed to get wikipedia resources");
+        }, 8000);
+
+        var wikiUrl = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=4&exintro=&explaintext=&exsectionformat=plain&titles=" + add + "&generator=redirects&redirects=&grdprop=title&callback=wikiCallback";
+        console.log(wikiUrl);
+        $.ajax({
+              url: wikiUrl,
+              dataType: 'jsonp',
+              jsonp: 'callback',
+              success: function(response){
+                  for(key in response.query.pages){
+                      //console.log(response.query.pages[key].extract);
+                      self.wikiText(response.query.pages[key].extract);
+                  }
+
+              }
+          });
+          clearTimeout(wikiRequestTimeout);
+      }
+
 /*Document*/
     self.createMap = function() {
 
@@ -143,9 +172,16 @@ var NeighborhoodViewModel = function() {
           console.log("places_changed()");
           //grabs results from searchBox
           var places = searchBox.getPlaces();
-          if (places.length == 0) {
+          var len = places.length;
+          if (len == 0) {
                 //no match was found
                 return;
+           }else if (len == 1){
+               //when only one result is returned, it has to be a particular location.
+               if(places[0].types[0] === "locality"){
+                   console.log("make wiki request for " + places[0].formatted_address);
+                   getWikiText(places[0].formatted_address);
+               }
            }else if (places.length > 10){
                //Don't grab more than 10 markers to avoid google's OVER_QUERY_LIMIT
                 places.splice(9, places.length-10);
