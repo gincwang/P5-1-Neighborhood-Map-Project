@@ -9,22 +9,30 @@
 	</head>
 	<body>
 		<!-- Navigation -->
-		<div class = "navbar navbar-default">
-			<div class = "container">
-				<div class = "navbar-header">
-					<a class ="navbar-brand" href = "#">Neighborhood Map</a>
+		<div>
+			<form role="search">
+		        <div class="form-group">
+		             <input type="text" class="form-control" id="searchField" placeholder="Search">
+		           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 				</div>
-				<form class="navbar-form navbar-left" role="search">
-			        <div class="form-group">
-			             <input type="text" class="form-control" id="searchField" placeholder="Search">
-			           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+		    </form>
+			<div class="btn-toolbar filter" role="toolbar">
+				<div class="btn-group btn-group-sm filter-dollar" role="group">
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i></div>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
+				</div>
+				<div class="btn-group btn-group-sm filter-star" role="group">
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
 					</div>
-			    </form>
-				<ul class="nav nav-pills pull-right">
-					<li class = "active"><a href="#">Food</a></li>
-					<li><a href = "#">Entertainment</a></li>
-					<li><a href = "#">History</a></li>
-				</ul>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
+					</div>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
+					</div>
+					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i>
+					</div>
+				</div>
 			</div>
 		</div>
 

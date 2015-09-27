@@ -146,14 +146,11 @@ FOURSQUARE
               center: {lat: 39.388, lng: -100.279},
               scrollwheel: true,
               panControl: false,
+              mapTypeControl: false,
               zoom: 5,
               zoomControlOptions: {
                   style: google.maps.ZoomControlStyle.SMALL,
                   position: google.maps.ControlPosition.RIGHT_BOTTOM
-              },
-              mapTypeControlOptions: {
-                  style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                  position: google.maps.ControlPosition.TOP_RIGHT
               }
             });
 
