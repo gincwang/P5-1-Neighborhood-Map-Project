@@ -162,6 +162,12 @@ FOURSQUARE
            //Assign the clear-search button next to search bar
            var clearButton = document.getElementById("clear-search");
            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
+           
+           var dollarFilter = document.getElementById("dollar-filter");
+           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
+           var starFilter = document.getElementById("star-filter");
+           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(starFilter);
+
            //Assign the sideLIst to display
            var sideList = document.getElementById("side-list");
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);

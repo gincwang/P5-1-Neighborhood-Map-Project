@@ -8,34 +8,37 @@
 		<link rel = "stylesheet" href = "css/style.css">
 	</head>
 	<body>
-		<!-- Navigation -->
+		<!-- Controls -->
 		<div>
 			<form role="search">
-		        <div class="form-group">
-		             <input type="text" class="form-control" id="searchField" placeholder="Search">
-		           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-				</div>
+	             <input type="text" class="form-control" id="searchField" placeholder="Search">
+	           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 		    </form>
-			<div class="btn-toolbar filter" role="toolbar">
-				<div class="btn-group btn-group-sm filter-dollar" role="group">
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i></div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></div>
+				<div class="btn-group btn-group-sm" id="dollar-filter" role="group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu filter-dollar">
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i></li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
+					</ul>
 				</div>
-				<div class="btn-group btn-group-sm filter-star" role="group">
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-					</div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-					</div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-					</div>
-					<div class="btn btn-default"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i>
-					</div>
+				<div class="btn-group btn-group-sm" id="star-filter" role="group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Stars <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu filter-star">
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
+						</li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
+						</li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
+						</li>
+						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i>
+						</li>
+					</ul>
 				</div>
-			</div>
 		</div>
-
 		<!-- Google Map -->
 		<div id = "map">
 		</div>
