@@ -223,6 +223,7 @@ var NeighborhoodViewModel = function() {
            // more details for that place.
            searchBox.addListener('places_changed', function() {
               console.log("places_changed()");
+              var place_api = '';
               //grabs results from searchBox
               var places = searchBox.getPlaces();
               var len = places.length;
@@ -230,12 +231,14 @@ var NeighborhoodViewModel = function() {
                     console.log("no Searchbox result");
                     return;
                }else if (len == 1){
+                   place_api = 'GOOGLE';
                    //when only one result is returned, it has to be a particular location.
                    if(places[0].types[0] === "locality"){
                        console.log("make wiki request for " + places[0].formatted_address);
                        getWikiSearch(places[0].formatted_address);
                    }
                }else if (places.length > 1){
+                   place_api = 'FOURSQUARE';
                    //use foursquare API to search instead
                    getFoursquarePlaces(self.searchText[0].value, self.map.getCenter());
                    //Don't grab more than 10 markers to avoid google's OVER_QUERY_LIMIT
@@ -249,6 +252,73 @@ var NeighborhoodViewModel = function() {
               // For each place, create a new marker and grab the place_id
               var bounds = new google.maps.LatLngBounds();
               var place;
+              if(place_api === "GOOGLE"){
+                  place = places[0];
+                  var icon = {
+                      url: place.icon,
+                      size: new google.maps.Size(50, 50),
+                      origin: new google.maps.Point(0, 0),
+                      anchor: new google.maps.Point(17, 34),
+                      scaledSize: new google.maps.Size(25, 25)
+                  };
+                  (function(placeCopy){
+                      self.locations.markers.push(new google.maps.Marker({
+                          map: self.map,
+                          icon: icon,
+                          title: placeCopy.name,
+                          position: placeCopy.geometry.location,
+                          animation: google.maps.Animation.DROP
+                      }));
+                      //add click listener to each marker
+                      self.locations.markers[0].addListener('click',(function(index){
+                          return function(){
+                              console.log("marker clicked");
+                              self.showDetail(self.selectedMarker, self.locations.markersInfo()[0]);
+                              self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+                              setTimeout(function(){
+                                    self.selectedMarker.setAnimation(null);
+                              }, 700);
+                          };
+                      }));
+                  })(place);
+
+                  if (place.geometry.viewport) {
+                      // Only geocodes have viewport.
+                      bounds.union(place.geometry.viewport);
+                  } else {
+                      bounds.extend(place.geometry.location);
+                  }
+
+                  self.map.fitBounds(bounds);
+
+                  self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
+                       //console.log("build markersInfo array")
+                       if (_status === google.maps.places.PlacesServiceStatus.OK) {
+                           self.locations.markersInfo.push({
+                               name: _place.name,
+                               address: _place.formatted_address,
+                               website: _place.website,
+                               phone: _place.formatted_phone_number,
+                               photos: _place.photos,
+                               rating: _place.rating,
+                               price_level: _place.price_level,
+                               opening_hours: _place.opening_hours,
+                               reviews: _place.reviews,
+                               types: _place.types,
+                               geometry: _place.geometry,
+                               id: _place.place_id,
+                           });
+                           //console.log(self.locations.markersInfo());
+                       }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
+                         console.log("reaches query limit");
+                       }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
+                         console.log("error contacting google server for location details");
+                     }
+                   });
+
+              }
+
+              /*
               for(var k = 0; k < places.length; k++){
                   place = places[k];
                   var icon = {
@@ -296,7 +366,9 @@ var NeighborhoodViewModel = function() {
                   } else {
                       bounds.extend(place.geometry.location);
                   }
+                  */
 
+                  /*
                   //build markersInfo array
                   self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
                        //console.log("build markersInfo array")
@@ -330,7 +402,9 @@ var NeighborhoodViewModel = function() {
                    });
                  }
                   self.map.fitBounds(bounds);
+                  */
               });
+
           }else {
               console.log("google maps API wasn't loaded properly");
           }
