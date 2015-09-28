@@ -26,12 +26,12 @@ var NeighborhoodViewModel = function() {
     self.wikiText = ko.observable();
 
 /*Document*/
-    self.init = function() {
-        self.createMap();
-        self.initializeMarkers();
+    var init = function() {
+        createMap();
+        initializeMarkers();
     }
 /*Document*/
-    self.initializeMarkers = function(){
+    var initializeMarkers = function(){
         if(typeof google === "object" && typeof google.maps === "object"){
             self.selectedMarker = new google.maps.Marker({
                 position: {lat:0, lng:0}
@@ -123,20 +123,42 @@ FOURSQUARE
       5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK
       Client secret
       0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2
+      Access Token URL
+      https://foursquare.com/oauth2/access_token
+      Authorize URL
+      https://foursquare.com/oauth2/authorize
 */
 
-      var getYelpSearch = function(name, geometry) {
-          //consumer key: HKHpbWKPHu7_4hFB-65vdA
+      var getFoursquareSearch = function(_name, _geometry, _address) {
+
           var regex = /,/;
           var regex2 = /\s/g;
-          name = name.replace(regex, "").replace(regex2, "+");
-          console.log(name);
-          var yelpUrl = "http://api.yelp.com/v2/search?term=" + name + "&ll=" + geometry.location.H + "," + geometry.location.L;
-          console.log(yelpUrl);
+          _name = _name.replace(regex, "");
+          //console.log(name);
+          // https://api.foursquare.com/v2/venues/search
+          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.location.H + "," + _geometry.location.L + "&limit=5&client_id=5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK&client_secret=0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2&v=20150927";
+          //console.log(url);
+          $.ajax({
+              url: url,
+              dataType: 'jsonp',
+              jsonp: 'callback',
+              success: function(response){
+                  console.log("//foursquare - match this address: " + _address);
+                  var venueLength = response.response.venues.length;
+                  if( venueLength > 0){
+                      for(var i =0; i < venueLength; i++){
+                          if(response.response.venues[i].location.address === _address){
+                              console.log(response.response.venues[i].location.address);
+                          }
+                      }
+                  }
+
+              }
+          })
       }
 
 /*Document*/
-    self.createMap = function() {
+     var createMap = function() {
         if( typeof google === "object" && typeof google.maps === "object"){
 
             /* Google API Key: AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk  */
@@ -162,7 +184,7 @@ FOURSQUARE
            //Assign the clear-search button next to search bar
            var clearButton = document.getElementById("clear-search");
            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
-           
+
            var dollarFilter = document.getElementById("dollar-filter");
            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
            var starFilter = document.getElementById("star-filter");
@@ -269,9 +291,9 @@ FOURSQUARE
                   }
 
                   //build markersInfo array
-                  self.service.getDetails({placeId:place.place_id}, function(_place, status) {
-                       console.log("build markersInfo array")
-                       if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
+                       //console.log("build markersInfo array")
+                       if (_status === google.maps.places.PlacesServiceStatus.OK) {
                            self.locations.markersInfo.push({
                                name: _place.name,
                                address: _place.formatted_address,
@@ -284,16 +306,18 @@ FOURSQUARE
                                reviews: _place.reviews,
                                types: _place.types,
                                geometry: _place.geometry,
-                               id: _place.place_id
+                               id: _place.place_id,
+                               visible: true
                            });
                            if(_place.types[0] !== "locality"){
-                               console.log(_place.types[0]);
-                               getYelpSearch(_place.name, _place.geometry);
+                               var streetName = _place.formatted_address.substring(0,  _place.formatted_address.indexOf(','));
+                               console.log(streetName);
+                               getFoursquareSearch(_place.name, _place.geometry, streetName);
                            }
                            //console.log(self.locations.markersInfo());
-                       }else if (status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
+                       }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
                          console.log("reaches query limit");
-                       }else if (status === google.maps.places.PlacesServiceStatus.ERROR){
+                       }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
                          console.log("error contacting google server for location details");
                      }
                    });
@@ -306,7 +330,7 @@ FOURSQUARE
     }
 
     //get the map started with the init()
-    self.init();
+    init();
 
 }
 
