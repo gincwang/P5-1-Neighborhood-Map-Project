@@ -100,3 +100,7 @@ html, body {
     vertical-align: top;
     display: inline-block;
 }
+
+.webLink {
+    font-size: 14px;
+}

@@ -124,16 +124,16 @@ var NeighborhoodViewModel = function() {
 
 
       var getFoursquarePlaces = function(_name, _geometry) {
+
           var client_id = "5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK";
           var client_secret = "0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2";
 
           var regex = /,/;
           var regex2 = /\s/g;
+          var regex3 = /\/\//;
           _name = _name.replace(regex, "");
-          console.log(_geometry);
           // https://api.foursquare.com/v2/venues/search
           var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=10&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
-          console.log(url);
           $.ajax({
               url: url,
               dataType: 'jsonp',
@@ -155,6 +155,34 @@ var NeighborhoodViewModel = function() {
                           jsonp: 'callback',
                           success: function(response){
                               console.log(response);
+                              var venueInfo = response.response.venue;
+                              self.locations.markersInfo.push({
+                                  name: venueInfo.name,
+                                  address: venueInfo.location.address + ", " + venueInfo.location.formattedAddress[1],
+                                  website: venueInfo.url,
+                                  phone: venueInfo.contact.formattedPhone,
+                                  photo: null,
+                                  rating: venueInfo.rating,
+                                  hours: null,
+                                  price: null,
+                                  tips: venueInfo.tips,
+                                  types: venueInfo.categories,
+                                  geometry: {lat: venueInfo.location.lat, lng: venueInfo.location.lng},
+                                  id: venueInfo.id
+                              });
+                              var markerLength = self.locations.markersInfo().length
+                              if(venueInfo.hasOwnProperty("hours")){
+                                  self.locations.markersInfo()[markerLength-1].hours = venueInfo.hours.status;
+                              }
+                              if(venueInfo.hasOwnProperty("price")){
+                                  self.locations.markersInfo()[markerLength-1].price = venueInfo.price.currency;
+                              }
+                              if(venueInfo.hasOwnProperty("bestPhoto")){
+                                  self.locations.markersInfo()[markerLength-1].photo = {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix};
+                              }
+
+                              console.log("markersInfo");
+                              console.log(self.locations.markersInfo());
                           }
                       })
                   })
@@ -253,6 +281,7 @@ var NeighborhoodViewModel = function() {
               var bounds = new google.maps.LatLngBounds();
               var place;
               if(place_api === "GOOGLE"){
+                  //assumes there will only be one location when using GOOGLE api
                   place = places[0];
                   var icon = {
                       url: place.icon,
@@ -299,11 +328,10 @@ var NeighborhoodViewModel = function() {
                                address: _place.formatted_address,
                                website: _place.website,
                                phone: _place.formatted_phone_number,
-                               photos: _place.photos,
+                               photo: null,
                                rating: _place.rating,
-                               price_level: _place.price_level,
-                               opening_hours: _place.opening_hours,
-                               reviews: _place.reviews,
+                               price: null,
+                               hours: null,
                                types: _place.types,
                                geometry: _place.geometry,
                                id: _place.place_id,
@@ -316,6 +344,9 @@ var NeighborhoodViewModel = function() {
                      }
                    });
 
+              }else if(place_api === "FOURSQUARE"){
+                  console.log("checking for foursquare data");
+                  console.log(self.locations.markersInfo());
               }
 
               /*
@@ -378,7 +409,7 @@ var NeighborhoodViewModel = function() {
                                address: _place.formatted_address,
                                website: _place.website,
                                phone: _place.formatted_phone_number,
-                               photos: _place.photos,
+                               photo: _place.photos,
                                rating: _place.rating,
                                price_level: _place.price_level,
                                opening_hours: _place.opening_hours,
