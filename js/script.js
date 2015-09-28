@@ -6,6 +6,7 @@ var LocationModel = function() {
 
     self.markers = [];
     self.markersInfo = ko.observableArray();
+    self.foursquareIDs = [];
 }
 
 
@@ -82,6 +83,8 @@ var NeighborhoodViewModel = function() {
         self.listVisible(true);
         self.detailVisible(false);
         self.selectedMarkerInfo(null);
+        self.wikiText('');
+        self.locations.foursquareIDs = [];
     }
 
     self.resetSearch = function(){
@@ -92,6 +95,7 @@ var NeighborhoodViewModel = function() {
 
     var getWikiSearch = function(address){
         //filter out country text out of the address
+
         var regex = /,\sUSA/;
         var regex2 = /\s/g;
         var regex3 = /,/;
@@ -117,42 +121,43 @@ var NeighborhoodViewModel = function() {
           });
           clearTimeout(wikiRequestTimeout);
       }
-/*
-FOURSQUARE
-      Client id
-      5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK
-      Client secret
-      0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2
-      Access Token URL
-      https://foursquare.com/oauth2/access_token
-      Authorize URL
-      https://foursquare.com/oauth2/authorize
-*/
 
-      var getFoursquareSearch = function(_name, _geometry, _address) {
+
+      var getFoursquarePlaces = function(_name, _geometry) {
+          var client_id = "5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK";
+          var client_secret = "0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2";
 
           var regex = /,/;
           var regex2 = /\s/g;
           _name = _name.replace(regex, "");
-          //console.log(name);
+          console.log(_geometry);
           // https://api.foursquare.com/v2/venues/search
-          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.location.H + "," + _geometry.location.L + "&limit=5&client_id=5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK&client_secret=0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2&v=20150927";
-          //console.log(url);
+          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=10&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
+          console.log(url);
           $.ajax({
               url: url,
               dataType: 'jsonp',
               jsonp: 'callback',
               success: function(response){
-                  console.log("//foursquare - match this address: " + _address);
-                  var venueLength = response.response.venues.length;
-                  if( venueLength > 0){
-                      for(var i =0; i < venueLength; i++){
-                          if(response.response.venues[i].location.address === _address){
-                              console.log(response.response.venues[i].location.address);
-                          }
-                      }
+                 // console.log(response);
+                  var venuesLength = response.response.venues.length;
+                  for(var i = 0; i < venuesLength; i++){
+                      self.locations.foursquareIDs.push(response.response.venues[i].id);
                   }
-
+                  console.log(self.locations.foursquareIDs);
+                  self.locations.foursquareIDs.forEach(function(id){
+                      console.log(id);
+                      var detailUrl = "https://api.foursquare.com/v2/venues/" + id + "?&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
+                      console.log(detailUrl);
+                      $.ajax({
+                          url: detailUrl,
+                          dataType: 'jsonp',
+                          jsonp: 'callback',
+                          success: function(response){
+                              console.log(response);
+                          }
+                      })
+                  })
               }
           })
       }
@@ -222,7 +227,7 @@ FOURSQUARE
               var places = searchBox.getPlaces();
               var len = places.length;
               if (len == 0) {
-                    //no match was found
+                    console.log("no Searchbox result");
                     return;
                }else if (len == 1){
                    //when only one result is returned, it has to be a particular location.
@@ -230,7 +235,9 @@ FOURSQUARE
                        console.log("make wiki request for " + places[0].formatted_address);
                        getWikiSearch(places[0].formatted_address);
                    }
-               }else if (places.length > 10){
+               }else if (places.length > 1){
+                   //use foursquare API to search instead
+                   getFoursquarePlaces(self.searchText[0].value, self.map.getCenter());
                    //Don't grab more than 10 markers to avoid google's OVER_QUERY_LIMIT
                     places.splice(9, places.length-10);
                }
@@ -312,7 +319,7 @@ FOURSQUARE
                            if(_place.types[0] !== "locality"){
                                var streetName = _place.formatted_address.substring(0,  _place.formatted_address.indexOf(','));
                                console.log(streetName);
-                               getFoursquareSearch(_place.name, _place.geometry, streetName);
+                               //getFoursquareSearch(_place.name, _place.geometry, streetName);
                            }
                            //console.log(self.locations.markersInfo());
                        }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
