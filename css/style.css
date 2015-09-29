@@ -5,12 +5,62 @@ html, body {
     padding:0;
 }
 
+/** @map */
+#map {
+    height: 100%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/** @search bar */
 .form-control {
     width: 400px;
     height: 48px;
     margin: 20px 0px 5px 20px;
 }
 
+#searchField {
+    font-size: 16px;
+    background-color: #2C1808;
+    color: #FFFFFF;
+}
+
+#clear-search {
+    color: #FFFFFF;
+    font-size: 16px;
+    padding: 12px;
+    position: absolute;
+    text-align: left;
+    top: 22px !important;
+    left: 380px !important;
+}
+
+.pac-item {
+    font-family: 'Open Sans', sans-serif;
+    color: #FFD7B6;
+    background-color: #2C1808;
+    height: 40px;
+    vertical-align: baseline;
+    font-size: 12px;
+    padding: 5px 0px 0px 0px;
+}
+
+.pac-item:hover, .pac-item-selected {
+    background-color: #743500;
+}
+
+.pac-item-query {
+    color: #FFFFFF;
+}
+
+.pac-container {
+    background-color: #743500;
+}
+
+
+
+/** @filters */
 .filter-group {
     font-family: 'Open Sans', sans-serif;
     right: 10px !important;
@@ -52,29 +102,7 @@ html, body {
     background-color: #FF9B49;
 }
 
-#map {
-    height: 100%;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#searchField {
-    font-size: 16px;
-    background-color: #2C1808;
-    color: #FFFFFF;
-}
-
-#clear-search {
-    color: #FFFFFF;
-    font-size: 16px;
-    padding: 12px;
-    position: absolute;
-    text-align: left;
-    top: 22px !important;
-    left: 380px !important;
-}
-
+/** @result list */
 #side-list {
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
@@ -86,6 +114,16 @@ html, body {
     border-radius: 5px;
 }
 
+.price-style {
+    color: #FF9A47;
+}
+
+.tipStyle {
+    font-size: 12px;
+}
+
+
+/** @result detail */
 #list-detail {
     font-family: 'Open Sans', sans-serif;
     color: #FFFFFF;
@@ -97,29 +135,6 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     border-radius: 5px;
-}
-
-
-.pac-item {
-    font-family: 'Open Sans', sans-serif;
-    color: #FFD7B6;
-    background-color: #2C1808;
-    height: 40px;
-    vertical-align: baseline;
-    font-size: 12px;
-    padding: 5px 0px 0px 0px;
-}
-
-.pac-item:hover, .pac-item-selected {
-    background-color: #743500;
-}
-
-.pac-item-query {
-    color: #FFFFFF;
-}
-
-.pac-container {
-    background-color: #743500;
 }
 
 .list-group-item {
@@ -157,14 +172,6 @@ html, body {
 .webLink {
     font-size: 14px;
     color: #8DBFE6;
-}
-
-.price-style {
-    color: #FF9A47;
-}
-
-.tipStyle {
-    font-size: 12px;
 }
 
 #wikiStyle {
