@@ -12,6 +12,7 @@ var LocationModel = function() {
 var FilterModel = function() {
     var self = this;
 
+    self.availablePrice = ['$', '$$', '$$$', '$$$$'];
     self.price = ko.observableArray();
     self.rating = ko.observable(1);
 }
@@ -102,12 +103,34 @@ var NeighborhoodViewModel = function() {
 
     self.filterResults = function(){
         console.log("filter results");
+        console.log(self.filters.price());
+        console.log(self.filters.rating());
+        self.locations.markersInfo().forEach(function(place){
+            var showPrice = false;
+            var showRating = false;
+
+            if(self.filters.price().length === 0){
+                console.log("no price filter");
+                showPrice = true;
+            }else {
+                if(place.price){
+                    for(var i = 0; i < self.filters.price().length; i++){
+                        if(place.price === self.filters.price()[i]){
+                            console.log("price matched!" + place.price + " " + self.filters.price()[i]);
+                            showPrice = true;
+                        }
+                    }
+                }
+            }
+
+            if(self.filters.rating() === 1){
+                showRating = true;
+            }else {
+
+            }
+        })
     }
 
-    self.togglePriceBtn = function(elem){
-        console.log("toggle price");
-        console.log(elem);
-    }
 
     var getWikiSearch = function(address){
         //filter out country text out of the address
@@ -176,26 +199,19 @@ var NeighborhoodViewModel = function() {
                                   name: venueInfo.name,
                                   address: venueInfo.location.address + ", " + venueInfo.location.formattedAddress[1],
                                   website: venueInfo.url,
-                                  phone: venueInfo.contact.formattedPhone,
-                                  photo: null,
+                                  phone: venueInfo.contact,
+                                  photo: {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix},
                                   rating: venueInfo.rating,
-                                  hours: null,
-                                  price: null,
+                                  hours: venueInfo.hours,
+                                  price: venueInfo.price,
                                   tips: venueInfo.tips,
                                   types: venueInfo.categories,
                                   geometry: {H: venueInfo.location.lat, L: venueInfo.location.lng},
-                                  id: venueInfo.id
+                                  id: venueInfo.id,
+                                  visible: true
                               });
-                              var markerLength = self.locations.markersInfo().length
-                              if(venueInfo.hasOwnProperty("hours")){
-                                  self.locations.markersInfo()[markerLength-1].hours = venueInfo.hours.status;
-                              }
-                              if(venueInfo.hasOwnProperty("price")){
-                                  self.locations.markersInfo()[markerLength-1].price = venueInfo.price.currency;
-                              }
-                              if(venueInfo.hasOwnProperty("bestPhoto")){
-                                  self.locations.markersInfo()[markerLength-1].photo = {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix};
-                              }
+                              var markerLength = self.locations.markersInfo().length;
+
 
                               console.log("markersInfo");
                               console.log(self.locations.markersInfo());
@@ -372,15 +388,16 @@ var NeighborhoodViewModel = function() {
                            self.locations.markersInfo.push({
                                name: _place.name,
                                address: _place.formatted_address,
-                               website: _place.website,
-                               phone: _place.formatted_phone_number,
+                               website: null,
+                               phone: null,
                                photo: null,
-                               rating: _place.rating,
+                               rating: null,
                                price: null,
                                hours: null,
                                types: _place.types,
                                geometry: _place.geometry.location,
                                id: _place.place_id,
+                               visible: true
                            });
                            //console.log(self.locations.markersInfo());
                        }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){

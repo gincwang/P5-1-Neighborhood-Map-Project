@@ -17,11 +17,7 @@
 				<div class="btn-group btn-group-sm" id="dollarInput" role="group">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
 					</button>
-					<select multiple class="dropdown-menu filter-dollar">
-						<option>$</option>
-						<option>$$</i></option>
-						<option>$$$</i></option>
-						<option>$$$$</i></option>
+					<select multiple="true" size="4" class="dropdown-menu filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
 					</select>
 
 				</div>
@@ -31,7 +27,7 @@
 					<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
 				</div>
 				<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
-					<button type="button" class="btn btn-default" >Filter</button>
+					<button type="button" class="btn btn-default filter-btn">Filter</button>
 				</div>
 		</div>
 		<!-- Google Map -->
@@ -42,7 +38,17 @@
 			<li data-bind="event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
 				<div class="list-group-item-textGroup">
 					<p data-bind="text: name" class="list-group-item-title"></p>
-					<div data-bind="if: rating"><p><span data-bind="text: rating"></span><span>/10 </span><span data-bind="text: types[0].name"></span></p></div>
+					<div>
+						<!-- ko if: rating -->
+						<span data-bind="text: rating"></span> -
+						<!-- /ko -->
+						<!-- ko if: types -->
+						 <span data-bind="text: types[0].name"></span>
+						<!-- /ko -->
+						<!-- ko if: price -->
+						 - <span data-bind="text: price.currency"></span>
+						<!-- /ko -->
+					</div>
 					<p data-bind="text: address"></p>
 				</div>
 				<div data-bind="if: photo" class="info-img">
@@ -60,8 +66,8 @@
 				<h3 data-bind="text: name"></h3>
 				<h5 data-bind="text: address"></h5>
 				<div data-bind="if: website"><a target="_blank" class="webLink" data-bind="text: website, attr:{href: website}"></a></div>
-				<div data-bind="if: phone"><h5><i class="glyphicon glyphicon-phone-alt"></i><span data-bind="text: phone"></span></h5></div>
-				<div data-bind="if: hours"><h5><i class="glyphicon glyphicon-time"></i><span data-bind="text: hours"></span></h5></div>
+				<div data-bind="if: phone"><h5><i class="glyphicon glyphicon-phone-alt"></i><span data-bind="text: phone.formattedPhone"></span></h5></div>
+				<div data-bind="if: hours"><h5><i class="glyphicon glyphicon-time"></i><span data-bind="text: hours.status"></span></h5></div>
 			</div>
 			<div data-bind="if: types[0]==='locality'">
 				<hr>
