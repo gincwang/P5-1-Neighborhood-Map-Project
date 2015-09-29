@@ -36,9 +36,10 @@ html, body {
 #clear-search {
     font-size: 16px;
     padding: 12px;
-    margin: 22px 0px 0px -40px;
     position: absolute;
     text-align: left;
+    top: 85px !important;
+    left: 380px !important;
 }
 
 #ratingInput {
@@ -69,6 +70,10 @@ html, body {
 
 #filterBtn {
     margin-left: 27px;
+}
+
+#dollarInput {
+    margin-left: 20px;
 }
 
 .pac-item {
@@ -110,4 +115,16 @@ html, body {
 
 .webLink {
     font-size: 14px;
+}
+
+@media (max-width: 500px) {
+
+    #searchField {
+        width: 90%;
+    }
+
+    #clear-search {
+        left: auto !important;
+        right: 20px;
+    }
 }

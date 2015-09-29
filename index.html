@@ -10,25 +10,24 @@
 	<body>
 		<!-- Controls -->
 		<div>
+			<div class="btn-group btn-group-sm" id="dollarInput" role="group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
+				</button>
+				<select multiple="true" size="4" class="dropdown-menu filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
+				</select>
+			</div>
+			<div class="btn-group btn-group-sm" id="ratingInput" role="group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ratings <span class="caret"></span>
+				</button>
+				<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
+			</div>
+			<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
+				<button type="button" class="btn btn-default">Filter</button>
+			</div>
 			<form role="search">
-	             <input type="text" class="form-control" id="searchField" placeholder="Search">
-	           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-		    </form>
-				<div class="btn-group btn-group-sm" id="dollarInput" role="group">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
-					</button>
-					<select multiple="true" size="4" class="dropdown-menu filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
-					</select>
-
-				</div>
-				<div class="btn-group btn-group-sm" id="ratingInput" role="group">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ratings <span class="caret"></span>
-					</button>
-					<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
-				</div>
-				<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
-					<button type="button" class="btn btn-default">Filter</button>
-				</div>
+				 <input type="text" class="form-control" id="searchField" placeholder="Search">
+				<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+			</form>
 		</div>
 		<!-- Google Map -->
 		<div id = "map">

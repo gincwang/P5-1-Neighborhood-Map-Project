@@ -310,27 +310,30 @@ var NeighborhoodViewModel = function() {
             });
 
             // MAP UI //
+
+            var dollarFilter = document.getElementById("dollarInput");
+            var ratingFilter = document.getElementById("ratingInput");
+            var filterButton = document.getElementById("filterBtn");
+            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
+            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingFilter);
+            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(filterButton);
+
             // Assign the search box and link it to the UI element.
            var input = document.getElementById('searchField');
            var searchBox = new google.maps.places.SearchBox(input);
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+           self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(input);
            //Assign the clear-search button next to search bar
            var clearButton = document.getElementById("clear-search");
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
-
-           var dollarFilter = document.getElementById("dollarInput");
-           var ratingFilter = document.getElementById("ratingInput");
-           var filterButton = document.getElementById("filterBtn");
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingFilter);
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(filterButton);
+           self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(clearButton);
 
            //Assign the sideLIst to display
            var sideList = document.getElementById("side-list");
+           //sideList.index = 4;
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
+
            //Assign detail box below sideLIst
            var listDetail = document.getElementById("list-detail");
-           listDetail.index = 1;        //takes the same spot as side-List
+           listDetail.index = 3;        //takes the same spot as side-List
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(listDetail);
            //Activate google autocomplete service
            self.service = new google.maps.places.PlacesService(self.map);
