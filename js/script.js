@@ -225,6 +225,7 @@ var NeighborhoodViewModel = function() {
                               var venueInfo = response.response.venue;
                               var photoObject = null;
                               var priceObject = null;
+                              var tipsObject = null;
                               if(venueInfo.bestPhoto){
                                   photoObject = {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix};
                               }
@@ -235,6 +236,13 @@ var NeighborhoodViewModel = function() {
                                       priceObject = priceObject.concat("$");
                                   }
                               }
+                              if(venueInfo.tips){
+                                  tipsObject = venueInfo.tips.groups[0].items;
+                                  var cutOff = 3;
+                                  if(tipsObject.length > cutOff){
+                                      tipsObject.splice(cutOff, tipsObject.length - cutOff);
+                                  }
+                              }
 
                               self.locations.markersInfo.push({
                                   name: venueInfo.name,
@@ -243,9 +251,10 @@ var NeighborhoodViewModel = function() {
                                   phone: venueInfo.contact,
                                   photo: photoObject,
                                   rating: venueInfo.rating,
+                                  ratingColor: venueInfo.ratingColor,
                                   hours: venueInfo.hours,
                                   price: priceObject,
-                                  tips: venueInfo.tips,
+                                  tips: tipsObject,
                                   types: venueInfo.categories,
                                   geometry: {H: venueInfo.location.lat, L: venueInfo.location.lng},
                                   id: venueInfo.id,
@@ -437,6 +446,7 @@ var NeighborhoodViewModel = function() {
                                rating: null,
                                price: null,
                                hours: null,
+                               tips: null,
                                types: _place.types,
                                geometry: _place.geometry.location,
                                id: _place.place_id,

@@ -12,6 +12,7 @@ html, body {
 }
 
 .filter-group {
+    font-family: 'Open Sans', sans-serif;
     right: 10px !important;
     width: 65px;
 }
@@ -60,38 +61,49 @@ html, body {
 
 #searchField {
     font-size: 16px;
+    background-color: #2C1808;
+    color: #FFFFFF;
 }
 
 #clear-search {
+    color: #FFFFFF;
     font-size: 16px;
     padding: 12px;
     position: absolute;
     text-align: left;
-    top: 85px !important;
+    top: 22px !important;
     left: 380px !important;
 }
 
 #side-list {
+    font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     margin: 5px 20px;
     width: 400px;
     max-height: 400px;
     overflow:hidden;
-    overflow-y:scroll;
+    overflow-y:auto;
+    border-radius: 5px;
 }
 
 #list-detail {
-    background: white;
+    font-family: 'Open Sans', sans-serif;
+    color: #FFFFFF;
+    background-color: #2C1808;
     width: 400px;
     margin: 5px 20px;
     padding: 10px;
     position: relative;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-radius: 5px;
 }
 
 
 .pac-item {
+    font-family: 'Open Sans', sans-serif;
+    color: #FFD7B6;
+    background-color: #2C1808;
     height: 40px;
     vertical-align: baseline;
     font-size: 12px;
@@ -99,11 +111,24 @@ html, body {
 }
 
 .pac-item:hover, .pac-item-selected {
-    background-color: #FFBC7D;
+    background-color: #743500;
+}
+
+.pac-item-query {
+    color: #FFFFFF;
+}
+
+.pac-container {
+    background-color: #743500;
+}
+
+.list-group-item {
+    color: #FFD7B6;
+    background-color: #2C1808;
 }
 
 .list-group-item:hover {
-    background-color: #FFBC7D;
+    background-color: #743500;
 }
 
 .list-group-item-textGroup {
@@ -119,6 +144,7 @@ html, body {
 }
 
 .list-group-item-title {
+    color: #FFFFFF;
     font-size: 16px;
     font-weight: bold;
 }
@@ -130,6 +156,21 @@ html, body {
 
 .webLink {
     font-size: 14px;
+    color: #8DBFE6;
+}
+
+.price-style {
+    color: #FF9A47;
+}
+
+.tipStyle {
+    font-size: 12px;
+}
+
+#wikiStyle {
+    padding: 15px;
+    line-height: 20px;
+    font: 13px;
 }
 
 @media (max-width: 500px) {

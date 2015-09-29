@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
         <meta name = "viewport" content = "width=device-width, initial-scale = 1">
 		<title>Neighborhood Map</title>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.min.css" media = "screen">
 		<link rel = "stylesheet" href = "css/style.css">
 	</head>
@@ -37,13 +38,13 @@
 					<p data-bind="text: name" class="list-group-item-title"></p>
 					<div>
 						<!-- ko if: rating -->
-						<span data-bind="text: rating"></span> -
+						<span data-bind="text: rating, style: {color: '#' + ratingColor}"></span> -
 						<!-- /ko -->
 						<!-- ko if: types -->
 						 <span data-bind="text: types[0].name"></span>
 						<!-- /ko -->
 						<!-- ko if: price -->
-						 - <span data-bind="text: price"></span>
+						 - <span data-bind="text: price" class="price-style"></span>
 						<!-- /ko -->
 					</div>
 					<p data-bind="text: address"></p>
@@ -63,13 +64,29 @@
 				<h3 data-bind="text: name"></h3>
 				<h5 data-bind="text: address"></h5>
 				<div data-bind="if: website"><a target="_blank" class="webLink" data-bind="text: website, attr:{href: website}"></a></div>
-				<div data-bind="if: phone"><h5><i class="glyphicon glyphicon-phone-alt"></i><span data-bind="text: phone.formattedPhone"></span></h5></div>
-				<div data-bind="if: hours"><h5><i class="glyphicon glyphicon-time"></i><span data-bind="text: hours.status"></span></h5></div>
+				<div data-bind="if: phone"><h5><i class="glyphicon glyphicon-phone-alt"></i> <span data-bind="text: phone.formattedPhone"></span></h5>
+				</div>
+				<div><h5>
+					<!-- ko if: rating -->
+					Rating: <span data-bind="text: rating"></span>/10 -
+					<!-- /ko -->
+					<!-- ko if: price -->
+					 Price: <span data-bind="text: price" class="price-style"></span>
+					<!-- /ko -->
+				</h5></div>
+				<div>
+					<span data-bind="if: hours"><h5><i class="glyphicon glyphicon-time"></i><span data-bind="text: hours.status"></span></h5>
+				</div>
+				<div class="tipStyle" data-bind="if: tips"><h5>Tips: </h5>
+					<ul data-bind="foreach: tips">
+						<li data-bind="text: $data.text"></li>
+					</ul>
+				</div>
 			</div>
 			<div data-bind="if: types[0]==='locality'">
 				<hr>
 				<h5>Wikipedia Quick Facts:</h5>
-				<h6 data-bind="text: $parent.wikiText"></h6>
+				<h6 id="wikiStyle" data-bind="text: $parent.wikiText"></h6>
 			</div>
 		</div>
 
