@@ -10,19 +10,17 @@
 	<body>
 		<!-- Controls -->
 		<div>
-			<div class="btn-group btn-group-sm" id="dollarInput" role="group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
-				</button>
-				<select multiple="true" size="4" class="dropdown-menu filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
+			<div class="filter-group" id="dollarInput" role="group">
+				<p class="filter-title"><strong>Price</strong></p><br>
+				<select multiple="true" size="4" class="filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
 				</select>
 			</div>
-			<div class="btn-group btn-group-sm" id="ratingInput" role="group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ratings <span class="caret"></span>
-				</button>
-				<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
+			<div class="filter-group" id="ratingInput" role="group">
+				<p class="filter-title"><strong>Ratings </strong><i class="glyphicon glyphicon-triangle-top"></i></p>
+				<input type="number" class="filter-rating" placeholder="1<n<9" min="1" max="9" data-bind="value: filters.rating">
 			</div>
-			<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
-				<button type="button" class="btn btn-default">Filter</button>
+			<div id="filterBtn" class="filter-group" data-bind="click: filterResults">
+				<button type="button" class="filter-title filter-highlight"><strong>Filter</strong></button>
 			</div>
 			<form role="search">
 				 <input type="text" class="form-control" id="searchField" placeholder="Search">
@@ -33,7 +31,7 @@
 		<div id = "map">
 		</div>
 		<!-- List Results -->
-		<ul class = "list-group" id = "side-list" data-bind = "visible: listVisible, foreach: locations.markersInfo">
+		<ul class = "list-group" id = "side-list" data-bind = "fadeVisible: listVisible, foreach: locations.markersInfo">
 			<li data-bind="visible: visible, event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
 				<div class="list-group-item-textGroup">
 					<p data-bind="text: name" class="list-group-item-title"></p>
@@ -47,7 +45,6 @@
 						<!-- ko if: price -->
 						 - <span data-bind="text: price"></span>
 						<!-- /ko -->
-						<span data-bind="text: visible"></span>
 					</div>
 					<p data-bind="text: address"></p>
 				</div>
@@ -58,7 +55,7 @@
 		</ul>
 
 		<!-- Item Details -->
-		<div id="list-detail" data-bind="visible: detailVisible, with: selectedMarkerInfo" >
+		<div id="list-detail" data-bind="fadeVisible: detailVisible, with: selectedMarkerInfo" >
 			<div data-bind="if: photo" class="info-img">
 				<img height="285" width="380" alt="location image" data-bind="attr: {src: photo.pre + '285x380' + photo.suf}">
 			</div>

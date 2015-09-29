@@ -314,9 +314,9 @@ var NeighborhoodViewModel = function() {
             var dollarFilter = document.getElementById("dollarInput");
             var ratingFilter = document.getElementById("ratingInput");
             var filterButton = document.getElementById("filterBtn");
-            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
-            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingFilter);
-            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(filterButton);
+            self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(dollarFilter);
+            self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(ratingFilter);
+            self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(filterButton);
 
             // Assign the search box and link it to the UI element.
            var input = document.getElementById('searchField');
@@ -328,12 +328,11 @@ var NeighborhoodViewModel = function() {
 
            //Assign the sideLIst to display
            var sideList = document.getElementById("side-list");
-           //sideList.index = 4;
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
 
            //Assign detail box below sideLIst
            var listDetail = document.getElementById("list-detail");
-           listDetail.index = 3;        //takes the same spot as side-List
+           listDetail.index = 10;
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(listDetail);
            //Activate google autocomplete service
            self.service = new google.maps.places.PlacesService(self.map);
@@ -464,6 +463,19 @@ var NeighborhoodViewModel = function() {
     //get the map started with the init()
     init();
 
+
+    ko.bindingHandlers.fadeVisible = {
+        init: function(element, valueAccessor) {
+            // Initially set the element to be instantly visible/hidden depending on the value
+            var value = valueAccessor();
+            $(element).toggle(ko.unwrap(value)); // Use "unwrapObservable" so we can handle values that may or may not be observable
+        },
+        update: function(element, valueAccessor) {
+            // Whenever the value subsequently changes, slowly fade the element in or out
+            var value = valueAccessor();
+            ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+        }
+    };
 }
 
 ko.applyBindings(new NeighborhoodViewModel());

@@ -11,15 +11,44 @@ html, body {
     margin: 20px 0px 5px 20px;
 }
 
-.btn-group-sm {
-    margin-top: 30px;
-    margin-left: 5px;
+.filter-group {
+    right: 10px !important;
+    width: 65px;
 }
 
 .filter-dollar {
     overflow: auto;
-    width: 60px;
+    width: 65px;
     min-width: 10px;
+    border-radius: 5px;
+    margin-top: -10px;
+}
+
+.filter-rating {
+    text-align: center;
+    width: 65px;
+    min-width: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 3px;
+}
+
+.filter-title {
+    border: 1px solid rgb(153, 153, 153);
+    width: 65px;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+
+.filter-highlight {
+    background-color: #FF7400;
+}
+
+.filter-highlight:hover {
+    background-color: #FF9B49;
 }
 
 #map {
@@ -42,13 +71,6 @@ html, body {
     left: 380px !important;
 }
 
-#ratingInput {
-    text-align: center;
-    min-width:0px;
-    width:60px;
-    padding-left: 5px;
-}
-
 #side-list {
     font-size: 12px;
     margin: 5px 20px;
@@ -68,13 +90,6 @@ html, body {
     text-overflow: ellipsis;
 }
 
-#filterBtn {
-    margin-left: 27px;
-}
-
-#dollarInput {
-    margin-left: 20px;
-}
 
 .pac-item {
     height: 40px;
@@ -120,7 +135,7 @@ html, body {
 @media (max-width: 500px) {
 
     #searchField {
-        width: 90%;
+        width: 70%;
     }
 
     #clear-search {
