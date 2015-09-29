@@ -172,7 +172,7 @@ var NeighborhoodViewModel = function() {
           var regex3 = /\/\//;
           _name = _name.replace(regex, "");
           // https://api.foursquare.com/v2/venues/search
-          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=10&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
+          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=20&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
           $.ajax({
               url: url,
               dataType: 'jsonp',
@@ -195,15 +195,28 @@ var NeighborhoodViewModel = function() {
                           success: function(response){
                               console.log(response);
                               var venueInfo = response.response.venue;
+                              var photoObject = null;
+                              var priceObject = null;
+                              if(venueInfo.bestPhoto){
+                                  photoObject = {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix};
+                              }
+                              if(venueInfo.price){
+                                  priceObject = "";
+                                  var tier = venueInfo.price.tier;
+                                  for(var i=0; i<tier; i++){
+                                      priceObject = priceObject.concat("$");
+                                  }
+                              }
+
                               self.locations.markersInfo.push({
                                   name: venueInfo.name,
                                   address: venueInfo.location.address + ", " + venueInfo.location.formattedAddress[1],
                                   website: venueInfo.url,
                                   phone: venueInfo.contact,
-                                  photo: {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix},
+                                  photo: photoObject,
                                   rating: venueInfo.rating,
                                   hours: venueInfo.hours,
-                                  price: venueInfo.price,
+                                  price: priceObject,
                                   tips: venueInfo.tips,
                                   types: venueInfo.categories,
                                   geometry: {H: venueInfo.location.lat, L: venueInfo.location.lng},
