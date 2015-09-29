@@ -27,7 +27,7 @@
 					<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
 				</div>
 				<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
-					<button type="button" class="btn btn-default filter-btn">Filter</button>
+					<button type="button" class="btn btn-default">Filter</button>
 				</div>
 		</div>
 		<!-- Google Map -->
@@ -35,7 +35,7 @@
 		</div>
 		<!-- List Results -->
 		<ul class = "list-group" id = "side-list" data-bind = "visible: listVisible, foreach: locations.markersInfo">
-			<li data-bind="event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
+			<li data-bind="visible: visible, event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
 				<div class="list-group-item-textGroup">
 					<p data-bind="text: name" class="list-group-item-title"></p>
 					<div>
@@ -48,6 +48,7 @@
 						<!-- ko if: price -->
 						 - <span data-bind="text: price"></span>
 						<!-- /ko -->
+						<span data-bind="text: visible"></span>
 					</div>
 					<p data-bind="text: address"></p>
 				</div>

@@ -6,6 +6,7 @@ var LocationModel = function() {
 
     self.markers = [];
     self.markersInfo = ko.observableArray();
+    self.listVisibleArray = ko.observableArray();
     self.foursquareIDs = [];
 }
 
@@ -105,30 +106,57 @@ var NeighborhoodViewModel = function() {
         console.log("filter results");
         console.log(self.filters.price());
         console.log(self.filters.rating());
-        self.locations.markersInfo().forEach(function(place){
+        var place = null;
+        for(var i=0, length = self.locations.markersInfo().length; i < length; i++){
+            place = self.locations.markersInfo()[i];
             var showPrice = false;
             var showRating = false;
 
-            if(self.filters.price().length === 0){
+            if(self.filters.price().length === 0){      //no price filter
                 console.log("no price filter");
                 showPrice = true;
             }else {
                 if(place.price){
-                    for(var i = 0; i < self.filters.price().length; i++){
-                        if(place.price === self.filters.price()[i]){
-                            console.log("price matched!" + place.price + " " + self.filters.price()[i]);
+                    for(var j = 0; j < self.filters.price().length; j++){
+                        if(place.price === self.filters.price()[j]){
+                            console.log("price matched!" + place.price + " " + self.filters.price()[j]);
                             showPrice = true;
+                            break;
                         }
                     }
                 }
             }
 
-            if(self.filters.rating() === 1){
+            if(self.filters.rating() <= 1){    //no rating filter
                 showRating = true;
             }else {
-
+                if(place.rating){
+                    if(place.rating >= self.filters.rating()){
+                        console.log("rating matched!" + place.rating + " " + self.filters.rating());
+                        showRating = true;
+                    }
+                }
             }
-        })
+
+            if(showPrice === true && showRating === true){
+                place.visible = true;
+                self.locations.markersInfo.splice(i, 1);
+                self.locations.markersInfo.splice(i, 0, place);
+                self.locations.markers[i].setMap(self.map);
+                console.log("this location shows");
+                console.log(place);
+            }else {
+                console.log("this location is filtered");
+                place.visible = false;
+                self.locations.markersInfo.splice(i, 1);
+                self.locations.markersInfo.splice(i, 0, place);
+                self.locations.markers[i].setMap(null);
+                console.log(place);
+            }
+        }
+
+        //filter markers
+
     }
 
 

@@ -16,10 +16,6 @@ html, body {
     margin-left: 5px;
 }
 
-.filter-btn {
-    margin-left: 20px;
-}
-
 .filter-dollar {
     overflow: auto;
     width: 60px;
@@ -69,6 +65,10 @@ html, body {
     position: relative;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#filterBtn {
+    margin-left: 27px;
 }
 
 .pac-item {
