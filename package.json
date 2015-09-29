@@ -1,0 +1,25 @@
+{
+  "name": "neighborhood_map",
+  "version": "1.0.0",
+  "description": "shows google maps and use 3rd party api for location data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gincwang/P5-1-Neighborhood-Map-Project.git"
+  },
+  "author": "Gin Wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gincwang/P5-1-Neighborhood-Map-Project/issues"
+  },
+  "homepage": "https://github.com/gincwang/P5-1-Neighborhood-Map-Project#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.1"
+  }
+}
