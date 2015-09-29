@@ -64,12 +64,12 @@ html, body {
 .filter-group {
     font-family: 'Open Sans', sans-serif;
     right: 10px !important;
-    width: 65px;
+    width: 70px;
 }
 
 .filter-dollar {
     overflow: auto;
-    width: 65px;
+    width: 70px;
     min-width: 10px;
     border-radius: 5px;
     margin-top: -10px;
@@ -77,7 +77,7 @@ html, body {
 
 .filter-rating {
     text-align: center;
-    width: 65px;
+    width: 70px;
     min-width: 10px;
     border-radius: 5px;
     margin-top: 5px;
@@ -85,8 +85,10 @@ html, body {
 }
 
 .filter-title {
+    background-color: #2C1808 !important;
+    color: #FFFFFF;
     border: 1px solid rgb(153, 153, 153);
-    width: 65px;
+    width: 70px;
     text-align: center;
     background-color: #FFFFFF;
     border-radius: 5px;
@@ -95,11 +97,12 @@ html, body {
 }
 
 .filter-highlight {
-    background-color: #FF7400;
+    padding: 10px;
+    background-color: #FF7400 !important;
 }
 
 .filter-highlight:hover {
-    background-color: #FF9B49;
+    background-color: #FF9B49 !important;
 }
 
 /** @result list */

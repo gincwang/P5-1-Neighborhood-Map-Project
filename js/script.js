@@ -1,3 +1,7 @@
+/** 09/29/15  Gin Wang
+    Udacity Project 5 Neighborhood Map Project
+    http://gincwang.github.io/P5-1-Neighborhood-Map-Project/ **/
+
 (function($){
 
 /**
