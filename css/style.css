@@ -68,6 +68,8 @@ html, body {
 }
 
 .filter-dollar {
+    color: #FFFFFF;
+    background-color: #2C1808;
     overflow: auto;
     width: 70px;
     min-width: 10px;
@@ -76,6 +78,8 @@ html, body {
 }
 
 .filter-rating {
+    color: #FFFFFF;
+    background-color: #2C1808;
     text-align: center;
     width: 70px;
     min-width: 10px;
