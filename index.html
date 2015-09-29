@@ -14,29 +14,24 @@
 	             <input type="text" class="form-control" id="searchField" placeholder="Search">
 	           	<a data-bind="click: resetSearch" id="clear-search" href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 		    </form>
-				<div class="btn-group btn-group-sm" id="dollar-filter" role="group">
+				<div class="btn-group btn-group-sm" id="dollarInput" role="group">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Price <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu filter-dollar">
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i></li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i><i class = "glyphicon glyphicon-usd"></i></li>
-					</ul>
+					<select multiple class="dropdown-menu filter-dollar">
+						<option>$</option>
+						<option>$$</i></option>
+						<option>$$$</i></option>
+						<option>$$$$</i></option>
+					</select>
+
 				</div>
-				<div class="btn-group btn-group-sm" id="star-filter" role="group">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Stars <span class="caret"></span>
+				<div class="btn-group btn-group-sm" id="ratingInput" role="group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ratings <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu filter-star">
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-						</li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-						</li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i><i class = "glyphicon glyphicon-star-empty"></i>
-						</li>
-						<li class="btn btn-default filter-btn"><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star"></i><i class = "glyphicon glyphicon-star-empty"></i>
-						</li>
-					</ul>
+					<input type="number" class="dropdown-menu filter-rating" placeholder="1<n<9" id="ratingInput" min="1" max="9" data-bind="value: filters.rating">
+				</div>
+				<div id="filterBtn" class="btn-group-sm" data-bind="click: filterResults">
+					<button type="button" class="btn btn-default" >Filter</button>
 				</div>
 		</div>
 		<!-- Google Map -->

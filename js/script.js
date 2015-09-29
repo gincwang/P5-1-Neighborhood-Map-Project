@@ -9,6 +9,12 @@ var LocationModel = function() {
     self.foursquareIDs = [];
 }
 
+var FilterModel = function() {
+    var self = this;
+
+    self.price = ko.observableArray();
+    self.rating = ko.observable(1);
+}
 
 //the viewmodel that controls all the views
 var NeighborhoodViewModel = function() {
@@ -16,6 +22,7 @@ var NeighborhoodViewModel = function() {
 
     self.map = null;
     self.locations = new LocationModel();
+    self.filters = new FilterModel();
     self.searchText = $('#searchField');
 
     self.listVisible = ko.observable(true);
@@ -91,6 +98,15 @@ var NeighborhoodViewModel = function() {
         console.log("reset search()");
         self.searchText[0].value = "";
         clearMapVisible();
+    }
+
+    self.filterResults = function(){
+        console.log("filter results");
+    }
+
+    self.togglePriceBtn = function(elem){
+        console.log("toggle price");
+        console.log(elem);
     }
 
     var getWikiSearch = function(address){
@@ -245,10 +261,12 @@ var NeighborhoodViewModel = function() {
            var clearButton = document.getElementById("clear-search");
            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(clearButton);
 
-           var dollarFilter = document.getElementById("dollar-filter");
+           var dollarFilter = document.getElementById("dollarInput");
+           var ratingFilter = document.getElementById("ratingInput");
+           var filterButton = document.getElementById("filterBtn");
            self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(dollarFilter);
-           var starFilter = document.getElementById("star-filter");
-           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(starFilter);
+           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingFilter);
+           self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(filterButton);
 
            //Assign the sideLIst to display
            var sideList = document.getElementById("side-list");
@@ -373,93 +391,8 @@ var NeighborhoodViewModel = function() {
                    });
 
               }else if(place_api === "FOURSQUARE"){
+                  //foursquare data is already populated
               }
-
-              /*
-              for(var k = 0; k < places.length; k++){
-                  place = places[k];
-                  var icon = {
-                      url: place.icon,
-                      size: new google.maps.Size(50, 50),
-                      origin: new google.maps.Point(0, 0),
-                      anchor: new google.maps.Point(17, 34),
-                      scaledSize: new google.maps.Size(25, 25)
-                  };
-                  //build marker array from place
-                  (function(placeCopy, kCopy){
-                      setTimeout((function(){
-                      self.locations.markers.push(new google.maps.Marker({
-                          map: self.map,
-                          icon: icon,
-                          title: placeCopy.name,
-                          position: placeCopy.geometry.location,
-                          animation: google.maps.Animation.DROP
-                      }));
-                      //add click listener to each marker
-                      self.locations.markers[kCopy].addListener('click',(function(index){
-                          return function(){
-                              console.log("marker clicked");
-                              var j = self.locations.markersInfo().map(
-                                            function(e){return e.geometry.location.H;}).indexOf(this.position.H);
-                              var k = self.locations.markersInfo().map(
-                                            function(e){return e.geometry.location.L;}).indexOf(this.position.L);
-                              if(j===k){
-                                  self.showDetail(self.selectedMarker, self.locations.markersInfo()[j]);
-                                  self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-                                  setTimeout(function(){
-                                        self.selectedMarker.setAnimation(null);
-                                  }, 700);
-                              }else {
-                                  console.log("can't match marker location info");
-                              }
-                          };
-                      })(kCopy));
-                    }), 50*kCopy);
-                  })(place,k);
-
-                  if (place.geometry.viewport) {
-                      // Only geocodes have viewport.
-                      bounds.union(place.geometry.viewport);
-                  } else {
-                      bounds.extend(place.geometry.location);
-                  }
-                  */
-
-                  /*
-                  //build markersInfo array
-                  self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
-                       //console.log("build markersInfo array")
-                       if (_status === google.maps.places.PlacesServiceStatus.OK) {
-                           self.locations.markersInfo.push({
-                               name: _place.name,
-                               address: _place.formatted_address,
-                               website: _place.website,
-                               phone: _place.formatted_phone_number,
-                               photo: _place.photos,
-                               rating: _place.rating,
-                               price_level: _place.price_level,
-                               opening_hours: _place.opening_hours,
-                               reviews: _place.reviews,
-                               types: _place.types,
-                               geometry: _place.geometry,
-                               id: _place.place_id,
-                               visible: true
-                           });
-                           if(_place.types[0] !== "locality"){
-                               var streetName = _place.formatted_address.substring(0,  _place.formatted_address.indexOf(','));
-                               console.log(streetName);
-                               //getFoursquareSearch(_place.name, _place.geometry, streetName);
-                           }
-                           //console.log(self.locations.markersInfo());
-                       }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
-                         console.log("reaches query limit");
-                       }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
-                         console.log("error contacting google server for location details");
-                     }
-                   });
-                 }
-                  self.map.fitBounds(bounds);
-                  */
               });
 
           }else {
