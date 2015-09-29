@@ -1,6 +1,10 @@
 (function($){
 
-//Model storing each marker info
+/**
+  * @desc model for storing location-related parameters
+  * @param  none
+  * @return none
+*/
 var LocationModel = function() {
     var self = this;
 
@@ -10,6 +14,11 @@ var LocationModel = function() {
     self.foursquareIDs = [];
 }
 
+/**
+  * @desc model for storing filter-related parameters
+  * @param  none
+  * @return none
+*/
 var FilterModel = function() {
     var self = this;
 
@@ -18,7 +27,11 @@ var FilterModel = function() {
     self.rating = ko.observable(1);
 }
 
-//the viewmodel that controls all the views
+/**
+  * @desc main viewmodel, controls everything on map
+  * @param  none
+  * @return none
+*/
 var NeighborhoodViewModel = function() {
     var self = this;
 
@@ -35,12 +48,22 @@ var NeighborhoodViewModel = function() {
     self.placeService = null;
     self.wikiText = ko.observable();
 
-/*Document*/
+    /**
+        @desc - gets called to populate everything on map
+        @param - none
+        @return - none
+    */
     var init = function() {
         createMap();
         initializeMarkers();
     }
-/*Document*/
+
+    /**
+        @desc - VM has 2 markers - the hover marker and selected marker, and they
+                are initialized here, but not yet added to map
+        @param - none
+        @return - none
+    */
     var initializeMarkers = function(){
         if(typeof google === "object" && typeof google.maps === "object"){
             self.selectedMarker = new google.maps.Marker({
@@ -53,19 +76,34 @@ var NeighborhoodViewModel = function() {
             console.log("google maps wasn't loaded properly");
         }
     }
-/*Document*/
+
+    /**
+        @desc - populates marker with _data location info
+        @param - marker: google.maps.Marker object,
+                  _data: location object with Lat/Lng and name property
+        @return - none
+    */
     self.showMarker = function(marker,_data){
-        console.log("show marker");
         marker.title = _data.name;
         marker.position = new google.maps.LatLng(_data.geometry.H, _data.geometry.L, false);
         marker.setMap(self.map);
     }
-/*Document*/
+
+    /**
+        @desc - removes marker from map view
+        @param - marker: google.maps.Marker object
+        @return - none
+    */
     self.removeMarker = function(marker) {
-        //console.log("remove Marker");
         marker.setMap(null);
     }
-/*Document*/
+
+    /**
+        @desc - show location detail view and selected marker on map
+        @param - marker: google.maps.Marker object
+                  _data: location object with Lat/Lng and name property
+        @return - none
+    */
     self.showDetail = function(marker,_data){
         //console.log("show detail");
         self.listVisible(false);
@@ -73,7 +111,11 @@ var NeighborhoodViewModel = function() {
         self.showMarker(marker,_data);
         self.selectedMarkerInfo(_data);
     }
-/*Document*/
+    /**
+        @desc - hides location detail view, and remove selected marker from map
+        @param - none
+        @return - none
+    */
     self.hideDetail = function(){
         //console.log("hide Detail");
         self.detailVisible(false);
@@ -82,7 +124,11 @@ var NeighborhoodViewModel = function() {
         self.selectedMarkerInfo(null);
     }
 
-    //clear everything except the search text
+    /**
+        @desc - reset all map variables except search text
+        @param - none
+        @return - none
+    */
     var clearMapVisible = function(){
         self.locations.markersInfo.removeAll();
         self.locations.markers.forEach(function(marker) {
@@ -96,22 +142,34 @@ var NeighborhoodViewModel = function() {
         self.locations.foursquareIDs = [];
     }
 
+    /**
+        @desc - reset all map variables, including search text
+        @param - none
+        @return - none
+    */
     self.resetSearch = function(){
         console.log("reset search()");
         self.searchText[0].value = "";
         clearMapVisible();
     }
 
+    /**
+        @desc - filter out location data based on current result filter
+        @param - none
+        @return - none
+    */
     self.filterResults = function(){
-        console.log("filter results");
-        console.log(self.filters.price());
-        console.log(self.filters.rating());
+
         var place = null;
+
         for(var i=0, length = self.locations.markersInfo().length; i < length; i++){
+            /*goes through each markersInfo object and compare criteria against
+            currently selected filters*/
             place = self.locations.markersInfo()[i];
             var showPrice = false;
             var showRating = false;
 
+            //check against price filter
             if(self.filters.price().length === 0){      //no price filter
                 console.log("no price filter");
                 showPrice = true;
@@ -127,6 +185,7 @@ var NeighborhoodViewModel = function() {
                 }
             }
 
+            //check against rating filter
             if(self.filters.rating() <= 1){    //no rating filter
                 showRating = true;
             }else {
@@ -138,91 +197,103 @@ var NeighborhoodViewModel = function() {
                 }
             }
 
+            //markersInfo object is only shown if both Price and Rating filters have been satisfied
             if(showPrice === true && showRating === true){
+                //this location is shown
                 place.visible = true;
+                //in order to trigger observableArray update for object field changes, need
+                //to remove the object and add it back to the array
                 self.locations.markersInfo.splice(i, 1);
                 self.locations.markersInfo.splice(i, 0, place);
                 self.locations.markers[i].setMap(self.map);
-                console.log("this location shows");
-                console.log(place);
             }else {
-                console.log("this location is filtered");
+                //this location is filtered
                 place.visible = false;
+                //in order to trigger observableArray update for object field changes, need
+                //to remove the object and add it back to the array
                 self.locations.markersInfo.splice(i, 1);
                 self.locations.markersInfo.splice(i, 0, place);
                 self.locations.markers[i].setMap(null);
-                console.log(place);
             }
         }
-
-        //filter markers
-
     }
 
-
+    /**
+      * @desc - gets wikipedia intro paragraph for locations with type "locality"
+      * @param - none
+      * @return - none
+    */
     var getWikiSearch = function(address){
-        //filter out country text out of the address
-
+        //filter out country text from the address
         var regex = /,\sUSA/;
         var regex2 = /\s/g;
         var regex3 = /,/;
         var add = address.replace(regex, "").replace(regex2,"%20").replace(regex3,"%2C");
-        //console.log(add);
 
         var wikiRequestTimeout = setTimeout(function(){
             self.wikiText("Failed to get wikipedia resources");
         }, 8000);
 
         var wikiUrl = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exsentences=4&exintro=&explaintext=&exsectionformat=plain&titles=" + add + "&generator=redirects&redirects=&grdprop=title&callback=wikiCallback";
-        //console.log(wikiUrl);
+
         $.ajax({
               url: wikiUrl,
               dataType: 'jsonp',
               jsonp: 'callback',
               success: function(response){
                   for(key in response.query.pages){
-                      //console.log(response.query.pages[key].extract);
                       self.wikiText(response.query.pages[key].extract);
+                      clearTimeout(wikiRequestTimeout);
                   }
               }
           });
-          clearTimeout(wikiRequestTimeout);
+
       }
 
-
+      /**
+          @desc - gets location info from foursquare API, then populate venue details to markersInfo array and set up markers on the map
+          @param - _name: search text
+                   _geometry: location data with LatLng
+          @return - none
+      */
       var getFoursquarePlaces = function(_name, _geometry) {
-
+          //not secure for client-side app
           var client_id = "5OEUZBD0W0WYJWSM5MF55Y2ZVCXBYKAMJCNCIYOEXFMDEIPK";
           var client_secret = "0FBED51EERO35ZVHFV5BHQSDA52QDRMC55QMVU2U23LBRXL2";
-
           var regex = /,/;
-          var regex2 = /\s/g;
-          var regex3 = /\/\//;
           _name = _name.replace(regex, "");
-          // https://api.foursquare.com/v2/venues/search
+          //fetch at most 20 results
           var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=20&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
+
+          var foursquareRequestTimeout = setTimeout(function(){
+              window.alert("foursquare API can't be reached");
+          }, 8000);
+
           $.ajax({
               url: url,
               dataType: 'jsonp',
               jsonp: 'callback',
               success: function(response){
-                 // console.log(response);
+                  clearTimeout(foursquareRequestTimeout);
+                  //store all venue id to model's foursquareID
                   var venuesLength = response.response.venues.length;
                   for(var i = 0; i < venuesLength; i++){
                       self.locations.foursquareIDs.push(response.response.venues[i].id);
                   }
-                  console.log(self.locations.foursquareIDs);
+
+                  //for each foursquareID, fire off ajax request for location details
                   self.locations.foursquareIDs.forEach(function(id){
-                      console.log(id);
                       var detailUrl = "https://api.foursquare.com/v2/venues/" + id + "?&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
-                      console.log(detailUrl);
+
                       $.ajax({
                           url: detailUrl,
                           dataType: 'jsonp',
                           jsonp: 'callback',
                           success: function(response){
-                              console.log(response);
+                              //store location detail into model's markersInfo array
                               var venueInfo = response.response.venue;
+
+                              //need to pre-process a few fields that might give access error when stored
                               var photoObject = null;
                               var priceObject = null;
                               var tipsObject = null;
@@ -244,6 +315,7 @@ var NeighborhoodViewModel = function() {
                                   }
                               }
 
+                              //push location into markersInfo array
                               self.locations.markersInfo.push({
                                   name: venueInfo.name,
                                   address: venueInfo.location.address + ", " + venueInfo.location.formattedAddress[1],
@@ -260,22 +332,18 @@ var NeighborhoodViewModel = function() {
                                   id: venueInfo.id,
                                   visible: true
                               });
+
+                              //add a new marker onto map for each markersInfo object
                               var markerLength = self.locations.markersInfo().length;
-
-
-                              console.log("markersInfo");
-                              console.log(self.locations.markersInfo());
-
                               (function(venueCopy){
                                   self.locations.markers.push(new google.maps.Marker({
                                       map: self.map,
-                                      icon: "https://playfoursquare.s3.amazonaws.com/press/2014/foursquare-icon-16x16.png",
+                                      icon: "https://playfoursquare.s3.amazonaws.com/press/2014/foursquare-icon-16x16.png",         //use foursquare logo as attribution
                                       title: venueCopy.name,
                                       position: {lat: venueCopy.location.lat, lng: venueCopy.location.lng},
                                       animation: google.maps.Animation.DROP
                                   }));
-                                  console.log(venueCopy);
-                                  console.log(self.locations.markers);
+
                                   //add click listener to each marker
                                   self.locations.markers[self.locations.markers.length-1].addListener('click',(function(index){
                                       return function(){
@@ -299,12 +367,14 @@ var NeighborhoodViewModel = function() {
         })
       }
 
-/*Document*/
+      /**
+        * @desc creates the map object, and add all map listeners
+        * @param  none
+        * @return none
+      */
      var createMap = function() {
         if( typeof google === "object" && typeof google.maps === "object"){
 
-            /* Google API Key: AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk  */
-            console.log("creating map object..")
              //initialize a map centering on the USA
             self.map = new google.maps.Map(document.getElementById('map'), {
               center: {lat: 39.388, lng: -100.279},
@@ -318,8 +388,8 @@ var NeighborhoodViewModel = function() {
               }
             });
 
-            // MAP UI //
-
+            //// MAP UI ////
+            //add filter buttons to map
             var dollarFilter = document.getElementById("dollarInput");
             var ratingFilter = document.getElementById("ratingInput");
             var filterButton = document.getElementById("filterBtn");
@@ -335,7 +405,7 @@ var NeighborhoodViewModel = function() {
            var clearButton = document.getElementById("clear-search");
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(clearButton);
 
-           //Assign the sideLIst to display
+           //Assign the sideList to display
            var sideList = document.getElementById("side-list");
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(sideList);
 
@@ -346,24 +416,22 @@ var NeighborhoodViewModel = function() {
            //Activate google autocomplete service
            self.service = new google.maps.places.PlacesService(self.map);
 
-           // MAP LISTENERS //
-    /*Document*/
+           //// MAP LISTENERS ////
            //hide currently selected marker
            self.map.addListener('click', function(){
                console.log("map is clicked");
                if(self.selectedMarkerInfo){self.hideDetail();}
            });
-    /*Document*/
+
            // Bias the SearchBox results towards current map's viewport.
            self.map.addListener('bounds_changed', function() {
              console.log("bounds_changed()");
              searchBox.setBounds(self.map.getBounds());
            });
-    /*Document*/
+
            // Listen for the event fired when the user selects a prediction and retrieve
            // more details for that place.
            searchBox.addListener('places_changed', function() {
-              console.log("places_changed()");
               var place_api = '';
               //grabs results from searchBox
               var places = searchBox.getPlaces();
@@ -374,6 +442,7 @@ var NeighborhoodViewModel = function() {
                }else if (len == 1){
                    place_api = 'GOOGLE';
                    //when only one result is returned, it has to be a particular location.
+                   //when location is a city, wiki info request gets fired
                    if(places[0].types[0] === "locality"){
                        console.log("make wiki request for " + places[0].formatted_address);
                        getWikiSearch(places[0].formatted_address);
@@ -382,21 +451,17 @@ var NeighborhoodViewModel = function() {
                    place_api = 'FOURSQUARE';
                    //use foursquare API to search instead
                    getFoursquarePlaces(self.searchText[0].value, self.map.getCenter());
-                   //Don't grab more than 10 markers to avoid google's OVER_QUERY_LIMIT
-                    places.splice(9, places.length-10);
                }
 
               // Clear out the old markers and list location info
-              console.log("clearing map variables (except search text)")
               clearMapVisible();
 
-              // For each place, create a new marker and grab the place_id
+              //creates marker for the google location, and adds it to markersInfo array.
               var bounds = new google.maps.LatLngBounds();
               var place;
               if(place_api === "GOOGLE"){
                   //assumes there will only be one location when using GOOGLE api
                   place = places[0];
-                  console.log(place);
                   var icon = {
                       url: place.icon,
                       size: new google.maps.Size(50, 50),
@@ -404,6 +469,7 @@ var NeighborhoodViewModel = function() {
                       anchor: new google.maps.Point(17, 34),
                       scaledSize: new google.maps.Size(25, 25)
                   };
+                  //create marker for place
                   (function(placeCopy){
                       self.locations.markers.push(new google.maps.Marker({
                           map: self.map,
@@ -425,17 +491,16 @@ var NeighborhoodViewModel = function() {
                       })());
                   })(place);
 
+                  //adjust google map zoom level based on recommendation
                   if (place.geometry.viewport) {
                       // Only geocodes have viewport.
                       bounds.union(place.geometry.viewport);
-                  } else {
-                      bounds.extend(place.geometry.location);
-                  }
-
+                  } else { bounds.extend(place.geometry.location); }
                   self.map.fitBounds(bounds);
 
+                  //fires off ajax request for location detail.
                   self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
-                       //console.log("build markersInfo array")
+                       //no need to retrieve more info than necessary
                        if (_status === google.maps.places.PlacesServiceStatus.OK) {
                            self.locations.markersInfo.push({
                                name: _place.name,
@@ -457,12 +522,13 @@ var NeighborhoodViewModel = function() {
                          console.log("reaches query limit");
                        }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
                          console.log("error contacting google server for location details");
+                         window.alert("can't retrieve info from google server");
                      }
                    });
 
-              }else if(place_api === "FOURSQUARE"){
-                  //foursquare data is already populated
-              }
+                  }else if(place_api === "FOURSQUARE"){
+                      //foursquare data is already populated from other request
+                  }
               });
 
           }else {
@@ -473,7 +539,11 @@ var NeighborhoodViewModel = function() {
     //get the map started with the init()
     init();
 
-
+    /**
+      * @desc custom ko binding for fading in/out elements
+      * @param  none
+      * @return none
+    */
     ko.bindingHandlers.fadeVisible = {
         init: function(element, valueAccessor) {
             // Initially set the element to be instantly visible/hidden depending on the value
