@@ -381,16 +381,40 @@ var NeighborhoodViewModel = function() {
 
              //initialize a map centering on the USA
             self.map = new google.maps.Map(document.getElementById('map'), {
-              center: {lat: 39.388, lng: -100.279},
+              center: {lat: 37.351073, lng:-121.887451},
               scrollwheel: true,
               panControl: false,
               mapTypeControl: false,
-              zoom: 5,
+              zoom: 11,
               zoomControlOptions: {
                   style: google.maps.ZoomControlStyle.SMALL,
                   position: google.maps.ControlPosition.RIGHT_BOTTOM
-              }
+              },
+              styles: [
+                  {
+                     "elementType": "labels.icon",
+                     "stylers": [
+                       { "visibility": "off" }
+                     ]
+                   }
+              ]
             });
+
+            var initialLocation;
+            if(navigator.geolocation) {
+               //browserSupportFlag = true;
+               navigator.geolocation.getCurrentPosition(function(position) {
+                   console.log(position);
+                 initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+                 self.map.setCenter(initialLocation);
+               }, function() {
+                   console.log("no geolocation");
+                   //still fail
+                // handleNoGeolocation(browserSupportFlag);
+               });
+           }else {
+               console.log("geolocation not supported..");
+           }
 
             //// MAP UI ////
             //add filter buttons to map
@@ -419,6 +443,8 @@ var NeighborhoodViewModel = function() {
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(listDetail);
            //Activate google autocomplete service
            self.service = new google.maps.places.PlacesService(self.map);
+
+
 
            //// MAP LISTENERS ////
            //hide currently selected marker
