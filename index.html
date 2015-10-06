@@ -33,8 +33,8 @@
 			</form>
 		</div>
 		<!-- Google Map -->
-		<div id = "map">
-		</div>
+		<div id = "map"></div>
+
 		<!-- List Results -->
 		<ul class = "list-group" id = "side-list" data-bind = "fadeVisible: listVisible, foreach: locations.markersInfo">
 			<li data-bind="visible: visible, event: {mouseover: $parent.showMarker.bind($data, $parent.hoverMarker), mouseout: $parent.removeMarker.bind($data, $parent.hoverMarker), click: $parent.showDetail.bind($data,$parent.selectedMarker)}" class = "list-group-item">
@@ -97,9 +97,9 @@
 		<script src = "bower_components/jquery/dist/jquery.min.js"></script>
 		<script src = "bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src = "bower_components/knockout/dist/knockout.js"></script>
-		<script	src="https://maps.googleapis.com/maps/api/js?region=US&key=AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk&libraries=places"></script>
-        <!--<script src = "dist/scripts/script.min.js"></script>-->
 		<script src = "js/script.js"></script>
+		<script async defer	src="https://maps.googleapis.com/maps/api/js?region=US&key=AIzaSyA8fuDDvxtlbFvtbiZJ7KqQiZiqlCSTRfk&libraries=places&callback=app.load"></script>
+        <!--<script src = "dist/scripts/script.min.js"></script>-->
 
     </body>
 </html>

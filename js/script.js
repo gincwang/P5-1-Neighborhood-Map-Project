@@ -1,9 +1,16 @@
 /** 09/29/15  Gin Wang
     Udacity Project 5 Neighborhood Map Project
     http://gincwang.github.io/P5-1-Neighborhood-Map-Project/ **/
+var app = app || {};
 
 (function($){
 "use strict";
+
+app.load = function() {
+    var nvm = new app.NeighborhoodViewModel();
+    ko.applyBindings(nvm);
+    nvm.load();
+}
 
 /**
   * @desc model for storing location-related parameters
@@ -32,12 +39,16 @@ var FilterModel = function() {
     self.rating = ko.observable(1);
 };
 
+app.log = function(){
+        console.log("logging...");
+    }
+
 /**
   * @desc main viewmodel, controls everything on map
   * @param  none
   * @return none
 */
-var NeighborhoodViewModel = function() {
+app.NeighborhoodViewModel = function() {
     var self = this;
 
     self.map = null;
@@ -58,7 +69,7 @@ var NeighborhoodViewModel = function() {
         @param - none
         @return - none
     */
-    var init = function() {
+    self.load = function() {
         createMap();
         initializeMarkers();
     };
@@ -395,7 +406,7 @@ var NeighborhoodViewModel = function() {
               })
               //since foursquare locations don't have recommended viewport settings built-in,
               //choose a convenient zoom level that's similar to foursquare search radius
-              self.map.setZoom(11);
+              self.map.setZoom(12);
           }
         })
     };
@@ -607,7 +618,8 @@ var NeighborhoodViewModel = function() {
     };
 
     //get the map started with the init()
-    init();
+    //load();
+
 
     /**
       * @desc custom ko binding for fading in/out elements
@@ -626,8 +638,7 @@ var NeighborhoodViewModel = function() {
             ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
         }
     };
-};
 
-ko.applyBindings(new NeighborhoodViewModel());
+};
 
 }(jQuery));
