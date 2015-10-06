@@ -325,7 +325,6 @@ var NeighborhoodViewModel = function() {
                           success: function(response){
                               //store location detail into model's markersInfo array
                               var venueInfo = response.response.venue;
-                              console.log(venueInfo);
                               //need to pre-process a few fields that might give access error when stored
                               var photoObject = null;
                               var priceObject = null;
@@ -396,7 +395,7 @@ var NeighborhoodViewModel = function() {
               })
               //since foursquare locations don't have recommended viewport settings built-in,
               //choose a convenient zoom level that's similar to foursquare search radius
-              self.map.setZoom(10);
+              self.map.setZoom(11);
           }
         })
     };
@@ -432,21 +431,26 @@ var NeighborhoodViewModel = function() {
 
             //try to get user's IP location as the new map center
             var initialLocation;
+            var initialSearchText = "sushi";
             if(navigator.geolocation) {
                //browserSupportFlag = true;
                navigator.geolocation.getCurrentPosition(function(position) {
                    console.log(position);
                  initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
                  self.map.setCenter(initialLocation);
+                 self.searchText[0].value = initialSearchText;
+                 getFoursquarePlaces(initialSearchText, self.map.getCenter());
                }, function() {
                    console.log("no geolocation");
                    //still fail
                 // handleNoGeolocation(browserSupportFlag);
-                self.searchText[0].value = "bars";
+                self.searchText[0].value = initialSearchText;
+                getFoursquarePlaces(initialSearchText, self.map.getCenter());
                });
            }else {
                console.log("geolocation not supported..");
-               document.dispatchEvent(searchBox.places_changed);
+                self.searchText[0].value = initialSearchText;
+                getFoursquarePlaces(initialSearchText, self.map.getCenter());
            }
 
             //// MAP UI ////
