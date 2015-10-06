@@ -3,6 +3,7 @@
     http://gincwang.github.io/P5-1-Neighborhood-Map-Project/ **/
 
 (function($){
+"use strict";
 
 /**
   * @desc model for storing location-related parameters
@@ -16,7 +17,7 @@ var LocationModel = function() {
     self.markersInfo = ko.observableArray();
     self.listVisibleArray = ko.observableArray();
     self.foursquareIDs = [];
-}
+};
 
 /**
   * @desc model for storing filter-related parameters
@@ -29,7 +30,7 @@ var FilterModel = function() {
     self.availablePrice = ['$', '$$', '$$$', '$$$$'];
     self.price = ko.observableArray();
     self.rating = ko.observable(1);
-}
+};
 
 /**
   * @desc main viewmodel, controls everything on map
@@ -60,7 +61,7 @@ var NeighborhoodViewModel = function() {
     var init = function() {
         createMap();
         initializeMarkers();
-    }
+    };
 
     /**
         @desc - VM has 2 markers - the hover marker and selected marker, and they
@@ -79,7 +80,7 @@ var NeighborhoodViewModel = function() {
         }else {
             console.log("google maps wasn't loaded properly");
         }
-    }
+    };
 
     /**
         @desc - populates marker with _data location info
@@ -91,7 +92,7 @@ var NeighborhoodViewModel = function() {
         marker.title = _data.name;
         marker.position = new google.maps.LatLng(_data.geometry.H, _data.geometry.L, false);
         marker.setMap(self.map);
-    }
+    };
 
     /**
         @desc - removes marker from map view
@@ -100,7 +101,7 @@ var NeighborhoodViewModel = function() {
     */
     self.removeMarker = function(marker) {
         marker.setMap(null);
-    }
+    };
 
     /**
         @desc - show location detail view and selected marker on map
@@ -118,14 +119,14 @@ var NeighborhoodViewModel = function() {
                 console.log("match found");
                 self.removeMarker(mk);
             }
-        })
+        });
         self.showMarker(marker,_data);
         self.selectedMarkerInfo(_data);
         self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(){
               self.selectedMarker.setAnimation(null);
         }, 700);
-    }
+    };
     /**
         @desc - hides location detail view, and remove selected marker from map
         @param - none
@@ -141,11 +142,11 @@ var NeighborhoodViewModel = function() {
                 if((mk.position.H - smi.geometry.H) < 0.00001 && (mk.position.L - smi.geometry.L) < 0.00001){
                     mk.setMap(self.map);
                 }
-            })
+            });
         }
         self.removeMarker(self.selectedMarker);
         self.selectedMarkerInfo(null);
-    }
+    };
 
     /**
         @desc - reset all map variables except search text
@@ -163,7 +164,7 @@ var NeighborhoodViewModel = function() {
         self.selectedMarkerInfo(null);
         self.wikiText('');
         self.locations.foursquareIDs = [];
-    }
+    };
 
     /**
         @desc - reset all map variables, including search text
@@ -174,7 +175,7 @@ var NeighborhoodViewModel = function() {
         console.log("reset search()");
         self.searchText[0].value = "";
         clearMapVisible();
-    }
+    };
 
     /**
         @desc - slide in and out the filter menu
@@ -183,7 +184,7 @@ var NeighborhoodViewModel = function() {
     */
     self.toggleFilter = function(){
         $(".filter-group").toggleClass("slide");
-    }
+    };
 
 
     /**
@@ -248,7 +249,7 @@ var NeighborhoodViewModel = function() {
                 self.locations.markers[i].setMap(null);
             }
         }
-    }
+    };
 
     /**
       * @desc - gets wikipedia intro paragraph for locations with type "locality"
@@ -280,7 +281,7 @@ var NeighborhoodViewModel = function() {
               }
           });
 
-      }
+      };
 
       /**
           @desc - gets location info from foursquare API, then populate venue details to markersInfo array and set up markers on the map
@@ -393,7 +394,7 @@ var NeighborhoodViewModel = function() {
               self.map.setZoom(10);
           }
         })
-      }
+    };
 
       /**
         * @desc creates the map object, and add all map listeners
@@ -587,7 +588,7 @@ var NeighborhoodViewModel = function() {
           }else {
               console.log("google maps API wasn't loaded properly");
           }
-    }
+    };
 
     //get the map started with the init()
     init();
@@ -609,7 +610,7 @@ var NeighborhoodViewModel = function() {
             ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
         }
     };
-}
+};
 
 ko.applyBindings(new NeighborhoodViewModel());
 
