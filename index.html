@@ -6,7 +6,8 @@
 		<title>Neighborhood Map</title>
 		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.min.css" media = "screen">
-		<link rel = "stylesheet" href = "dist/css/style.min.css">
+		<!--<link rel = "stylesheet" href = "dist/css/style.min.css">-->
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 		<!-- Controls -->
@@ -57,8 +58,8 @@
 
 		<!-- Item Details -->
 		<div id="list-detail" data-bind="fadeVisible: detailVisible, with: selectedMarkerInfo" >
-			<div data-bind="if: photo" class="info-img">
-				<img height="285" width="380" alt="location image" data-bind="attr: {src: photo.pre + '285x380' + photo.suf}">
+			<div data-bind="if: photo">
+				<img height="260" width="260" alt="location image" class="detail-img" data-bind="attr: {src: photo.pre + '260x260' + photo.suf}">
 			</div>
 			<div>
 				<h3 data-bind="text: name"></h3>
