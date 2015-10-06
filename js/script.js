@@ -274,7 +274,7 @@ var NeighborhoodViewModel = function() {
               dataType: 'jsonp',
               jsonp: 'callback',
               success: function(response){
-                  for(key in response.query.pages){
+                  for(var key in response.query.pages){
                       self.wikiText(response.query.pages[key].extract);
                       clearTimeout(wikiRequestTimeout);
                   }
@@ -325,11 +325,12 @@ var NeighborhoodViewModel = function() {
                           success: function(response){
                               //store location detail into model's markersInfo array
                               var venueInfo = response.response.venue;
-
+                              console.log(venueInfo);
                               //need to pre-process a few fields that might give access error when stored
                               var photoObject = null;
                               var priceObject = null;
                               var tipsObject = null;
+                              var typesObject = null;
                               if(venueInfo.bestPhoto){
                                   photoObject = {pre: venueInfo.bestPhoto.prefix, suf:venueInfo.bestPhoto.suffix};
                               }
@@ -347,6 +348,10 @@ var NeighborhoodViewModel = function() {
                                       tipsObject.splice(cutOff, tipsObject.length - cutOff);
                                   }
                               }
+                              if(venueInfo.categories.length > 0){
+                                  typesObject = venueInfo.categories[0].name;
+                              }
+
 
                               //push location into markersInfo array
                               self.locations.markersInfo.push({
@@ -360,7 +365,7 @@ var NeighborhoodViewModel = function() {
                                   hours: venueInfo.hours,
                                   price: priceObject,
                                   tips: tipsObject,
-                                  types: venueInfo.categories,
+                                  types: typesObject,
                                   geometry: {H: venueInfo.location.lat, L: venueInfo.location.lng},
                                   id: venueInfo.id,
                                   visible: true
@@ -437,9 +442,11 @@ var NeighborhoodViewModel = function() {
                    console.log("no geolocation");
                    //still fail
                 // handleNoGeolocation(browserSupportFlag);
+                self.searchText[0].value = "bars";
                });
            }else {
                console.log("geolocation not supported..");
+               document.dispatchEvent(searchBox.places_changed);
            }
 
             //// MAP UI ////
@@ -494,10 +501,10 @@ var NeighborhoodViewModel = function() {
               //grabs results from searchBox
               var places = searchBox.getPlaces();
               var len = places.length;
-              if (len == 0) {
+              if (len === 0) {
                     console.log("no Searchbox result");
                     return;
-               }else if (len == 1){
+               }else if (len === 1){
                    place_api = 'GOOGLE';
                    //when only one result is returned, it has to be a particular location.
                    //when location is a city, wiki info request gets fired
