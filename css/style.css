@@ -65,6 +65,26 @@ html, body {
     font-family: 'Open Sans', sans-serif;
     right: 10px !important;
     width: 70px;
+    transform: translateX(0px);
+    transition: 0.6s;
+}
+
+.filter-group.slide {
+    transform: translateX(100px);
+    transition: 0.6s;
+}
+
+#filter-toggle {
+    margin-top: 5px;
+    font-family: 'Open Sans', sans-serif;
+    right: 10px !important;
+    width: 70px;
+}
+
+.filterBurger {
+    display:block;
+    margin-left: auto;
+    font-size: 20px;
 }
 
 .filter-dollar {
@@ -176,6 +196,10 @@ html, body {
     display: inline-block;
 }
 
+.detail-img-div {
+    padding-top: 10px;
+}
+
 .detail-img {
     vertical-align: top;
     display: block;
@@ -200,11 +224,24 @@ html, body {
 @media (max-width: 500px) {
 
     #searchField {
-        width: 70%;
+        width: 80%;
     }
 
     #clear-search {
         left: auto !important;
-        right: 20px;
+        right: 14%;
+    }
+
+    #side-list {
+        width: 80%;
+        max-height: 330px;
+    }
+
+    #list-detail {
+        width: 90%;
+        max-height: 400px;
+        overflow:hidden;
+        overflow-y: auto;
+
     }
 }

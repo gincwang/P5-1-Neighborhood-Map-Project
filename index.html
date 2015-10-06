@@ -12,6 +12,9 @@
 	<body>
 		<!-- Controls -->
 		<div>
+			<div id="filter-toggle">
+				<button type="button" class="filterBurger" data-bind="click: toggleFilter"><i class="glyphicon glyphicon-menu-hamburger"></i></button>
+			</div>
 			<div class="filter-group" id="dollarInput" role="group">
 				<p class="filter-title"><strong>Price</strong></p><br>
 				<select multiple="true" size="4" class="filter-dollar" data-bind="options: filters.availablePrice, selectedOptions: filters.price">
@@ -21,7 +24,7 @@
 				<p class="filter-title"><strong>Ratings </strong><i class="glyphicon glyphicon-triangle-top"></i></p>
 				<input type="number" class="filter-rating" placeholder="1<n<9" min="1" max="9" data-bind="value: filters.rating">
 			</div>
-			<div id="filterBtn" class="filter-group" data-bind="click: filterResults">
+			<div class="filter-group" id="filterBtn" data-bind="click: filterResults">
 				<button type="button" class="filter-title filter-highlight"><strong>Filter</strong></button>
 			</div>
 			<form role="search">
@@ -58,7 +61,7 @@
 
 		<!-- Item Details -->
 		<div id="list-detail" data-bind="fadeVisible: detailVisible, with: selectedMarkerInfo" >
-			<div data-bind="if: photo">
+			<div data-bind="if: photo" class="detail-img-div">
 				<img height="260" width="260" alt="location image" class="detail-img" data-bind="attr: {src: photo.pre + '260x260' + photo.suf}">
 			</div>
 			<div>

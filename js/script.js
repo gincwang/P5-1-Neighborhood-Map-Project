@@ -158,6 +158,16 @@ var NeighborhoodViewModel = function() {
     }
 
     /**
+        @desc - slide in and out the filter menu
+        @param - none
+        @return - none
+    */
+    self.toggleFilter = function(){
+        $(".filter-group").toggleClass("slide");
+    }
+
+
+    /**
         @desc - filter out location data based on current result filter
         @param - none
         @return - none
@@ -418,9 +428,11 @@ var NeighborhoodViewModel = function() {
 
             //// MAP UI ////
             //add filter buttons to map
+            var toggleFilter = document.getElementById("filter-toggle");
             var dollarFilter = document.getElementById("dollarInput");
             var ratingFilter = document.getElementById("ratingInput");
             var filterButton = document.getElementById("filterBtn");
+            self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(toggleFilter);
             self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(dollarFilter);
             self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(ratingFilter);
             self.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(filterButton);
