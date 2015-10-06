@@ -46,8 +46,8 @@ var NeighborhoodViewModel = function() {
 
     self.listVisible = ko.observable(true);
     self.detailVisible = ko.observable(false);
-    self.selectedMarker = null;
     self.hoverMarker = null;
+    self.selectedMarker = null;
     self.selectedMarkerInfo = ko.observable();
     self.placeService = null;
     self.wikiText = ko.observable();
@@ -112,8 +112,19 @@ var NeighborhoodViewModel = function() {
         //console.log("show detail");
         self.listVisible(false);
         self.detailVisible(true);
+        //remove the duplicate marker when "selected marker" on it is active
+        self.locations.markers.forEach(function (mk) {
+            if(Math.abs(mk.position.H - _data.geometry.H) < 0.00001 && Math.abs(mk.position.L - _data.geometry.L) < 0.00001){
+                console.log("match found");
+                self.removeMarker(mk);
+            }
+        })
         self.showMarker(marker,_data);
         self.selectedMarkerInfo(_data);
+        self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){
+              self.selectedMarker.setAnimation(null);
+        }, 700);
     }
     /**
         @desc - hides location detail view, and remove selected marker from map
@@ -122,8 +133,16 @@ var NeighborhoodViewModel = function() {
     */
     self.hideDetail = function(){
         //console.log("hide Detail");
+        var smi = self.selectedMarkerInfo();
         self.detailVisible(false);
         self.listVisible(true);
+        if(smi){
+            self.locations.markers.forEach(function (mk) {
+                if((mk.position.H - smi.geometry.H) < 0.00001 && (mk.position.L - smi.geometry.L) < 0.00001){
+                    mk.setMap(self.map);
+                }
+            })
+        }
         self.removeMarker(self.selectedMarker);
         self.selectedMarkerInfo(null);
     }
@@ -175,7 +194,6 @@ var NeighborhoodViewModel = function() {
     self.filterResults = function(){
 
         var place = null;
-
         for(var i=0, length = self.locations.markersInfo().length; i < length; i++){
             /*goes through each markersInfo object and compare criteria against
             currently selected filters*/
@@ -363,10 +381,6 @@ var NeighborhoodViewModel = function() {
                                       return function(){
                                           console.log("marker clicked");
                                           self.showDetail(self.selectedMarker, self.locations.markersInfo()[markerLength - 1]);
-                                          self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-                                          setTimeout(function(){
-                                                self.selectedMarker.setAnimation(null);
-                                          }, 700);
                                       };
                                   })());
                               })(venueInfo);
@@ -389,7 +403,7 @@ var NeighborhoodViewModel = function() {
      var createMap = function() {
         if( typeof google === "object" && typeof google.maps === "object"){
 
-             //initialize a map centering on the USA
+             //initialize a map centering on San Jose, CA
             self.map = new google.maps.Map(document.getElementById('map'), {
               center: {lat: 37.351073, lng:-121.887451},
               scrollwheel: true,
@@ -410,6 +424,7 @@ var NeighborhoodViewModel = function() {
               ]
             });
 
+            //try to get user's IP location as the new map center
             var initialLocation;
             if(navigator.geolocation) {
                //browserSupportFlag = true;
@@ -525,10 +540,6 @@ var NeighborhoodViewModel = function() {
                           return function(){
                               console.log("marker clicked");
                               self.showDetail(self.selectedMarker, self.locations.markersInfo()[0]);
-                              self.selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-                              setTimeout(function(){
-                                    self.selectedMarker.setAnimation(null);
-                              }, 700);
                           };
                       })());
                   })(place);
