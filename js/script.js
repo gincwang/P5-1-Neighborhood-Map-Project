@@ -420,13 +420,18 @@ var NeighborhoodViewModel = function() {
                   position: google.maps.ControlPosition.RIGHT_BOTTOM
               },
               styles: [
-                  {
-                     "elementType": "labels.icon",
-                     "stylers": [
-                       { "visibility": "off" }
-                     ]
-                   }
-              ]
+                        {
+                          "elementType": "labels.text",
+                          "stylers": [
+                            { "visibility": "off" }
+                          ]
+                        },{
+                          "featureType": "administrative.locality",
+                          "stylers": [
+                            { "visibility": "on" }
+                          ]
+                        }
+                      ]
             });
 
             //try to get user's IP location as the new map center
