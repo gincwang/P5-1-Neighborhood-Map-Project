@@ -6,6 +6,11 @@ var app = app || {};
 (function($){
 "use strict";
 
+/**
+  * @desc called by google maps api callback when loaded, to initialize all the objects and bindings
+  * @param  none
+  * @return none
+*/
 app.load = function() {
     var nvm = new app.NeighborhoodViewModel();
     ko.applyBindings(nvm);
@@ -39,10 +44,6 @@ var FilterModel = function() {
     self.rating = ko.observable(1);
 };
 
-app.log = function(){
-        console.log("logging...");
-    }
-
 /**
   * @desc main viewmodel, controls everything on map
   * @param  none
@@ -70,6 +71,7 @@ app.NeighborhoodViewModel = function() {
         @return - none
     */
     self.load = function() {
+        $("#map").text = "";         //clear the error text
         createMap();
         initializeMarkers();
     };
@@ -614,12 +616,9 @@ app.NeighborhoodViewModel = function() {
 
           }else {
               console.log("google maps API wasn't loaded properly");
+              window.alert("google maps wasn't loaded properly");
           }
     };
-
-    //get the map started with the init()
-    //load();
-
 
     /**
       * @desc custom ko binding for fading in/out elements
@@ -635,7 +634,8 @@ app.NeighborhoodViewModel = function() {
         update: function(element, valueAccessor) {
             // Whenever the value subsequently changes, slowly fade the element in or out
             var value = valueAccessor();
-            ko.unwrap(value) ? $(element).fadeIn() : $(element).fadeOut();
+            if(ko.unwrap(value)){ $(element).fadeIn(); }
+             else { $(element).fadeOut(); }
         }
     };
 
