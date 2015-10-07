@@ -506,13 +506,11 @@ app.NeighborhoodViewModel = function() {
            //// MAP LISTENERS ////
            //hide currently selected marker
            self.map.addListener('click', function(){
-               console.log("map is clicked");
                if(self.selectedMarkerInfo){self.hideDetail();}
            });
 
            // Bias the SearchBox results towards current map's viewport.
            self.map.addListener('bounds_changed', function() {
-             console.log("bounds_changed()");
              searchBox.setBounds(self.map.getBounds());
            });
 
