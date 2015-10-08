@@ -25,12 +25,11 @@ There are components which you'll have to install on your local machine to run t
 `gulp minifyCSS`
 
 ## How to use this map
-  * Start typing in the search bar in the top left corner, you'll notice google's autocomplete service at work.
-  * You can search for a city, a particular business, or just about any type of business out there.
-  * It's recommended that you first search for a city before searching for businesses to narrow down your search.
-  * Once you decide on a search item, a list should appear below the search bar with the relevant results.
+  * The map will default to San Jose, CA on initial load, and if you grant webpage access to your current location, it will move your map to the new location.
+  * By default the search result returns items with keyword "sushi", the number of result will depend on your location.
   * You can click on any result from the list, and details about the location should expand.
   * When you hover over any item from the list, the corresponding marker should appear on map.
+  * You can type in the search bar to search for a city or any type of business.
   * On the top right corner are your filters, which you can use to filter your results based on Price/Ratings.
   * For filtering price, you can click on any of the "$" to select single items, or hold down "ctrl" key when you click to select multiple items.
   * For filtering rating, you can choose from number between 1 ~ 9, and the filter will weed out any location with rating lower than that number.
