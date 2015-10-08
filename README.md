@@ -8,21 +8,25 @@ http://gincwang.github.io/P5-1-Neighborhood-Map-Project/
 There are components which you'll have to install on your local machine to run this app:
 #### bower
 
-`npm install -g bower`
-`bower init`
-`bower install jquery --save-dev`
-`bower install bootstrap --save-dev`
-`bower install knockout --save-dev`
+````javascript
+npm install -g bower
+bower init
+bower install jquery --save-dev
+bower install bootstrap --save-dev
+bower install knockout --save-dev
+````
 #### gulp
 * OPTIONAL: only needed for minification workflow
-`npm init`
-`npm install -g gulp`
-`npm install gulp --save-dev`
-`npm install gulp-uglify`
-`npm install gulp-rename`
-`npm install gulp-minify-css`
-`gulp minifyJS`
-`gulp minifyCSS`
+````javascript
+npm init
+npm install -g gulp
+npm install gulp --save-dev
+npm install gulp-uglify
+npm install gulp-rename
+npm install gulp-minify-css
+gulp minifyJS
+gulp minifyCSS
+````
 
 ## How to use this map
   * The map will default to San Jose, CA on initial load, and if you grant webpage access to your current location, it will move your map to the new location.
@@ -40,10 +44,14 @@ There are components which you'll have to install on your local machine to run t
 ### Searching
 * Autocomplete feature is powered by Google
 * if you search for a city location, the location data will come from Google.
-* Searching for city also will fetch a few intro paragraph from Wikipedia.
+* Searching for city (e.g. 'San Jose, CA') will fetch a few intro paragraph from Wikipedia to display in location detail.
 * Searching for anything else, the location data will come from Foursquare.
 
 ### Filtering
 * You have the option to either filter your results by Price/Rating.
 * Use "ctrl" click to select/deselect multiple Price filters.
 * Choose between 1-9 to filter out any location with rating less than that number.
+
+
+## Limitations
+* No meaningful location detail will display if you search for a particular address, like "123 Mango St, City, State" - instead, search for point of interest terms like "coffee" or "starbucks" or "mcdonalds" 
