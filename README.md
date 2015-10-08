@@ -2,6 +2,28 @@
 Click here for the project on github:
 http://gincwang.github.io/P5-1-Neighborhood-Map-Project/
 
+## Setup
+
+### install packages
+There are components which you'll have to install on your local machine to run this app:
+#### bower
+
+`npm install -g bower`
+`bower init`
+`bower install jquery --save-dev`
+`bower install bootstrap --save-dev`
+`bower install knockout --save-dev`
+#### gulp
+* OPTIONAL: only needed for minification workflow
+`npm init`
+`npm install -g gulp`
+`npm install gulp --save-dev`
+`npm install gulp-uglify`
+`npm install gulp-rename`
+`npm install gulp-minify-css`
+`gulp minifyJS`
+`gulp minifyCSS`
+
 ## How to use this map
   * Start typing in the search bar in the top left corner, you'll notice google's autocomplete service at work.
   * You can search for a city, a particular business, or just about any type of business out there.
