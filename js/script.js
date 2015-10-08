@@ -309,7 +309,7 @@ app.NeighborhoodViewModel = function() {
           var regex = /,/;
           _name = _name.replace(regex, "");
           //fetch at most 20 results
-          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.H + "," + _geometry.L + "&limit=20&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
+          var url = "https://api.foursquare.com/v2/venues/search?query=" + _name + "&ll=" + _geometry.lat() + "," + _geometry.lng() + "&limit=20&client_id=" + client_id + "&client_secret=" + client_secret + "&v=20150927";
 
           var foursquareRequestTimeout = setTimeout(function(){
               window.alert("foursquare API can't be reached");
