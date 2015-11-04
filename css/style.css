@@ -22,7 +22,7 @@ html, body {
 
 #searchField {
     font-size: 16px;
-    background-color: darkgray;
+    background-color: dimgray;
     color: #FFFFFF;
 }
 
@@ -109,7 +109,7 @@ html, body {
 }
 
 .filter-title {
-    background-color: darkgray !important;
+    background-color: dimgray !important;
     color: #FFFFFF;
     border: 1px solid rgb(153, 153, 153);
     width: 70px;
@@ -154,7 +154,7 @@ html, body {
 #list-detail {
     font-family: 'Open Sans', sans-serif;
     color: #FFFFFF;
-    background-color: darkgray;
+    background-color: dimgray;
     width: 400px;
     margin: 5px 20px;
     padding: 10px;
