@@ -56,6 +56,7 @@ app.NeighborhoodViewModel = function() {
     self.locations = new LocationModel();
     self.filters = new FilterModel();
     self.searchText = $('#searchField');
+    self.searchBox;
 
     self.listVisible = ko.observable(true);
     self.detailVisible = ko.observable(false);
@@ -484,7 +485,7 @@ app.NeighborhoodViewModel = function() {
 
             // Assign the search box and link it to the UI element.
            var input = document.getElementById('searchField');
-           var searchBox = new google.maps.places.SearchBox(input);
+           self.searchBox = new google.maps.places.SearchBox(input);
            self.map.controls[google.maps.ControlPosition.LEFT_TOP].push(input);
            //Assign the clear-search button next to search bar
            var clearButton = document.getElementById("clear-search");
@@ -511,12 +512,12 @@ app.NeighborhoodViewModel = function() {
 
            // Bias the SearchBox results towards current map's viewport.
            self.map.addListener('bounds_changed', function() {
-             searchBox.setBounds(self.map.getBounds());
+             self.searchBox.setBounds(self.map.getBounds());
            });
 
            // Listen for the event fired when the user selects a prediction and retrieve
            // more details for that place.
-           searchBox.addListener('places_changed', changePlace);
+           self.searchBox.addListener('places_changed', changePlace);
 
         }else {
               console.log("google maps API wasn't loaded properly");
@@ -527,7 +528,7 @@ app.NeighborhoodViewModel = function() {
     var changePlace = function() {
           var place_api = '';
           //grabs results from searchBox
-          var places = searchBox.getPlaces();
+          var places = self.searchBox.getPlaces();
           var len = places.length;
           if (len === 0) {
                 console.log("no Searchbox result");
