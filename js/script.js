@@ -516,107 +516,110 @@ app.NeighborhoodViewModel = function() {
 
            // Listen for the event fired when the user selects a prediction and retrieve
            // more details for that place.
-           searchBox.addListener('places_changed', function() {
-              var place_api = '';
-              //grabs results from searchBox
-              var places = searchBox.getPlaces();
-              var len = places.length;
-              if (len === 0) {
-                    console.log("no Searchbox result");
-                    return;
-               }else if (len === 1){
-                   place_api = 'GOOGLE';
-                   //when only one result is returned, it has to be a particular location.
-                   //when location is a city, wiki info request gets fired
-                   if(places[0].types[0] === "locality"){
-                       console.log("make wiki request for " + places[0].formatted_address);
-                       getWikiSearch(places[0].formatted_address);
-                   }
-               }else if (places.length > 1){
-                   place_api = 'FOURSQUARE';
-                   //use foursquare API to search instead
-                   getFoursquarePlaces(self.searchText[0].value, self.map.getCenter());
-               }
+           searchBox.addListener('places_changed', changePlace);
 
-              // Clear out the old markers and list location info
-              clearMapVisible();
-
-              //creates marker for the google location, and adds it to markersInfo array.
-              var bounds = new google.maps.LatLngBounds();
-              var place;
-              if(place_api === "GOOGLE"){
-                  //assumes there will only be one location when using GOOGLE api
-                  place = places[0];
-                  var icon = {
-                      url: place.icon,
-                      size: new google.maps.Size(50, 50),
-                      origin: new google.maps.Point(0, 0),
-                      anchor: new google.maps.Point(17, 34),
-                      scaledSize: new google.maps.Size(25, 25)
-                  };
-                  //create marker for place
-                  (function(placeCopy){
-                      self.locations.markers.push(new google.maps.Marker({
-                          map: self.map,
-                          icon: icon,
-                          title: placeCopy.name,
-                          position: placeCopy.geometry.location,
-                          animation: google.maps.Animation.DROP
-                      }));
-                      //add click listener to each marker
-                      self.locations.markers[0].addListener('click',(function(index){
-                          return function(){
-                              console.log("marker clicked");
-                              self.showDetail(self.selectedMarker, self.locations.markersInfo()[0]);
-                          };
-                      })());
-                  })(place);
-
-                  //adjust google map zoom level based on recommendation
-                  if (place.geometry.viewport) {
-                      // Only geocodes have viewport.
-                      bounds.union(place.geometry.viewport);
-                  } else { bounds.extend(place.geometry.location); }
-                  self.map.fitBounds(bounds);
-
-                  //fires off ajax request for location detail.
-                  self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
-                       //no need to retrieve more info than necessary
-                       if (_status === google.maps.places.PlacesServiceStatus.OK) {
-                           self.locations.markersInfo.push({
-                               name: _place.name,
-                               address: _place.formatted_address,
-                               website: null,
-                               phone: null,
-                               photo: null,
-                               rating: null,
-                               price: null,
-                               hours: null,
-                               tips: null,
-                               types: _place.types,
-                               geometry: _place.geometry.location,
-                               id: _place.place_id,
-                               visible: true
-                           });
-                           //console.log(self.locations.markersInfo());
-                       }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
-                         console.log("reaches query limit");
-                       }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
-                         console.log("error contacting google server for location details");
-                         window.alert("can't retrieve info from google server");
-                     }
-                   });
-
-                  }else if(place_api === "FOURSQUARE"){
-                      //foursquare data is already populated from other request
-                  }
-              });
-
-          }else {
+        }else {
               console.log("google maps API wasn't loaded properly");
               window.alert("google maps wasn't loaded properly");
           }
-    };
+      };
+
+    var changePlace = function() {
+          var place_api = '';
+          //grabs results from searchBox
+          var places = searchBox.getPlaces();
+          var len = places.length;
+          if (len === 0) {
+                console.log("no Searchbox result");
+                return;
+           }else if (len === 1){
+               place_api = 'GOOGLE';
+               //when only one result is returned, it has to be a particular location.
+               //when location is a city, wiki info request gets fired
+               if(places[0].types[0] === "locality"){
+                   console.log("make wiki request for " + places[0].formatted_address);
+                   getWikiSearch(places[0].formatted_address);
+               }
+           }else if (places.length > 1){
+               place_api = 'FOURSQUARE';
+               //use foursquare API to search instead
+               getFoursquarePlaces(self.searchText[0].value, self.map.getCenter());
+           }
+
+          // Clear out the old markers and list location info
+          clearMapVisible();
+
+          //creates marker for the google location, and adds it to markersInfo array.
+          var bounds = new google.maps.LatLngBounds();
+          var place;
+          if(place_api === "GOOGLE"){
+              //assumes there will only be one location when using GOOGLE api
+              place = places[0];
+              var icon = {
+                  url: place.icon,
+                  size: new google.maps.Size(50, 50),
+                  origin: new google.maps.Point(0, 0),
+                  anchor: new google.maps.Point(17, 34),
+                  scaledSize: new google.maps.Size(25, 25)
+              };
+              //create marker for place
+              (function(placeCopy){
+                  self.locations.markers.push(new google.maps.Marker({
+                      map: self.map,
+                      icon: icon,
+                      title: placeCopy.name,
+                      position: placeCopy.geometry.location,
+                      animation: google.maps.Animation.DROP
+                  }));
+                  //add click listener to each marker
+                  self.locations.markers[0].addListener('click',(function(index){
+                      return function(){
+                          console.log("marker clicked");
+                          self.showDetail(self.selectedMarker, self.locations.markersInfo()[0]);
+                      };
+                  })());
+              })(place);
+
+              //adjust google map zoom level based on recommendation
+              if (place.geometry.viewport) {
+                  // Only geocodes have viewport.
+                  bounds.union(place.geometry.viewport);
+              } else { bounds.extend(place.geometry.location); }
+              self.map.fitBounds(bounds);
+
+              //fires off ajax request for location detail.
+              self.service.getDetails({placeId:place.place_id}, function(_place, _status) {
+                   //no need to retrieve more info than necessary
+                   if (_status === google.maps.places.PlacesServiceStatus.OK) {
+                       self.locations.markersInfo.push({
+                           name: _place.name,
+                           address: _place.formatted_address,
+                           website: null,
+                           phone: null,
+                           photo: null,
+                           rating: null,
+                           price: null,
+                           hours: null,
+                           tips: null,
+                           types: _place.types,
+                           geometry: _place.geometry.location,
+                           id: _place.place_id,
+                           visible: true
+                       });
+                       //console.log(self.locations.markersInfo());
+                   }else if (_status === google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT){
+                     console.log("reaches query limit");
+                   }else if (_status === google.maps.places.PlacesServiceStatus.ERROR){
+                     console.log("error contacting google server for location details");
+                     window.alert("can't retrieve info from google server");
+                 }
+               });
+
+              }else if(place_api === "FOURSQUARE"){
+                  //foursquare data is already populated from other request
+              }
+          };
+
 
     /**
       * @desc custom ko binding for fading in/out elements
