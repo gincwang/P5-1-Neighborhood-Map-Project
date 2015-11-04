@@ -2,32 +2,6 @@
 Click here for the project on github:
 http://gincwang.github.io/P5-1-Neighborhood-Map-Project/
 
-## Setup
-
-### install packages
-There are components which you'll have to install on your local machine to run this app:
-#### bower
-
-````javascript
-npm install -g bower
-bower init
-bower install jquery --save-dev
-bower install bootstrap --save-dev
-bower install knockout --save-dev
-````
-#### gulp
-* OPTIONAL: only needed for minification workflow
-````javascript
-npm init
-npm install -g gulp
-npm install gulp --save-dev
-npm install gulp-uglify
-npm install gulp-rename
-npm install gulp-minify-css
-gulp minifyJS
-gulp minifyCSS
-````
-
 ## How to use this map
   * The map will default to San Jose, CA on initial load, and if you grant webpage access to your current location, it will move your map to the new location.
   * By default the search result returns items with keyword "sushi", the number of result will depend on your location.
