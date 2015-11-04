@@ -22,7 +22,7 @@ html, body {
 
 #searchField {
     font-size: 16px;
-    background-color: #2C1808;
+    background-color: darkgray;
     color: #FFFFFF;
 }
 
@@ -39,7 +39,7 @@ html, body {
 .pac-item {
     font-family: 'Open Sans', sans-serif;
     color: #FFD7B6;
-    background-color: #2C1808;
+    background-color: darkgray;
     height: 40px;
     vertical-align: baseline;
     font-size: 12px;
@@ -47,7 +47,7 @@ html, body {
 }
 
 .pac-item:hover, .pac-item-selected {
-    background-color: #743500;
+    background-color: dimgray;
 }
 
 .pac-item-query {
@@ -55,7 +55,7 @@ html, body {
 }
 
 .pac-container {
-    background-color: #743500;
+    background-color: gray;
 }
 
 
@@ -89,7 +89,7 @@ html, body {
 
 .filter-dollar {
     color: #FFFFFF;
-    background-color: #2C1808;
+    background-color: darkgray;
     overflow: auto;
     width: 70px;
     min-width: 10px;
@@ -99,7 +99,7 @@ html, body {
 
 .filter-rating {
     color: #FFFFFF;
-    background-color: #2C1808;
+    background-color: darkgray;
     text-align: center;
     width: 70px;
     min-width: 10px;
@@ -109,7 +109,7 @@ html, body {
 }
 
 .filter-title {
-    background-color: #2C1808 !important;
+    background-color: darkgray !important;
     color: #FFFFFF;
     border: 1px solid rgb(153, 153, 153);
     width: 70px;
@@ -154,7 +154,7 @@ html, body {
 #list-detail {
     font-family: 'Open Sans', sans-serif;
     color: #FFFFFF;
-    background-color: #2C1808;
+    background-color: darkgray;
     width: 400px;
     margin: 5px 20px;
     padding: 10px;
@@ -166,11 +166,11 @@ html, body {
 
 .list-group-item {
     color: #FFD7B6;
-    background-color: #2C1808;
+    background-color: darkgray;
 }
 
 .list-group-item:hover {
-    background-color: #743500;
+    background-color: dimgray;
 }
 
 .list-group-item-textGroup {
