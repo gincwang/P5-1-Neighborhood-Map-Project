@@ -2,6 +2,10 @@
 Click here for the project on github:
 http://gincwang.github.io/P5-1-Neighborhood-Map-Project/
 
+Framework/Libraries: Knockout.js, jQuery
+
+API: Google Maps API, Foursquare API, Wikipedia API
+
 ## How to use this map
   * The map will default to San Jose, CA on initial load, and if you grant webpage access to your current location, it will move your map to the new location.
   * By default the search result returns items with keyword "sushi", the number of result will depend on your location.
