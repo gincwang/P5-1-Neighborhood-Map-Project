@@ -1,5 +1,7 @@
 # P5-1-Neighborhood-Map-Project
-Click here for the project on github:
+Project 5 of the Frontend Developer Nandodegree. This project involves building a web app from scratch while using multiple 3rd party APIs to construct a searchable neighborhood map with POI information.
+
+Click here for a demo:
 http://gincwang.github.io/P5-1-Neighborhood-Map-Project/
 
 Framework/Libraries: Knockout.js, jQuery
